@@ -1,5 +1,4 @@
-library(Matrix)
-library(graphicalVAR)
+
 init_mlMSVAR <- function(simdat,M, forwardAlgorithm=TRUE, particleFilter=FALSE){
 
 nVars <- dim(simdat)[3]

@@ -13,16 +13,12 @@
 #' @export
 
 
-require(nimble)
-require(parallel)
-require(coda)
-require(mcmcOutput)
-require(tidyverse)
+
 fit_mlMSVAR <- function(simdat, M, randomEffects="transition_probabilities",
                         niter=10000, nburnin=.5, inits=NULL, thin=1,
                         nVars, nchains=2,forwardAlgorithm=TRUE,particleFilter=FALSE,
                         ncores=2, neff=10, rhat=1.1,resetSamplerRate=50){
-  
+  #browser()
   #parallel computing stuff adapted from:
   #https://github.com/qureshlatif/QSLpersonal/blob/master/R/RunNimbleParallel.R
 
@@ -670,8 +666,8 @@ if(round(mxRht, digits = 1) > Rht.required | mn.neff < neff.required) {
 while(round(mxRht, digits = 2) > Rht.required | mn.neff < neff.required) {
   n.runs <- n.runs + 1
   print(str_c("Run = ", n.runs, ". Max Rhat = ", mxRht, " and min neff = ", mn.neff))
-  
-  
+
+
 
     if((n.runs/resetSamplerRate)%%1==0){
       out2 <- clusterEvalQ(cl, {
@@ -686,7 +682,7 @@ while(round(mxRht, digits = 2) > Rht.required | mn.neff < neff.required) {
         gc(verbose = F)
       })
     }
-   
+
 
   for(chn in 1:ncores) { # ncores must be > 1
     ind.keep <- c()
