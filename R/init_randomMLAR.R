@@ -32,10 +32,10 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
 #
   lm <- log((mean(resVar)^2)/sqrt((mean(resVar)^2)+(var(resVar))))
   lv <- log(1+((var(resVar))/(mean(resVar)^2)))
-  U <- diag(c(var(int),var(ar),lv))
+  U <- diag(c(var(int),var(ar),lv))/sqrt(c(var(int),var(ar),lv))
   inits <- list(effMeans=c(mean(int),mean(ar),lm),
                 U=U,
-                Ustar=chol(U/sqrt(c(var(int),var(ar),lv))))
+                Ustar=chol(U))
 
   inits$b0 <- int
   inits$b1 <- ar
