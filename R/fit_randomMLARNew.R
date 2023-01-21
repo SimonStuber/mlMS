@@ -112,7 +112,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
         out[ , i] <- mat[ , i] * vec[i]
       return(out)
     })
-  
+
   nTime <- dim(y)[1]
   N <- dim(y)[2]
   constants <- list(N=N,
@@ -122,13 +122,13 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
   }else{
     constants$fullAD <- 0
   }
-  
+
   if(estimateAffectDynamics){
     constants$estimateAffectDynamics <- 1
   }else{
     constants$estimateAffectDynamics <- 0
   }
-  
+
   if(!is.null(arOnX)){
     constants$predAr <- 1
   }else{
@@ -144,28 +144,28 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
   }else{
     constants$predMean <- 0
   }
-  
+
   if(!is.null(xOutcome)){
     constants$predX <- 1
   }else{
     constants$predX <- 0
   }
-  
+
   constants$randomRes <- 1*randomRes
-  
-  
+
+
   lastT <- apply(y, 2,function(x)which.last(!is.na(x)))
   firstT <- apply(y, 2,function(x)which.first(!is.na(x)))
-  
+
   constants$firstT <- firstT
   constants$lastT <- lastT
-  
+
   if(!constants$randomRes){
     print("No random residual variances specified.
         Possible predictors for random residual variances are beeing ignored.
         Affect dynamics are calculated based on a fixed residual variance.")
   }
-  
+
   modelBaseline <- nimbleCode({
     if(randomRes){
       for(i in 1:N){
@@ -177,7 +177,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
           y[t, i] ~ dnorm(yhat[t,i], sd=sqrt(res[i]))
         }
       }
-      
+
     }else{
       for(i in 1:N){
         yhat[firstT[i],i] <- b0Start[i]
@@ -189,22 +189,22 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
         }
       }
     }
-    
-    
+
+
     for(i in 1:N){
       if(predAr){
         b1[i] <- eff[i, 2] + bArPred*arOnX_c[i]
       }else{
         b1[i] <- eff[i, 2]
       }
-      
+
       if(predMean){
         b0[i] <- eff[i, 1] + bMeanPred*meanOnX_c[i]
       }else{
         b0[i] <- eff[i, 1]
       }
-      
-      
+
+
       if(randomRes){
         if(predResVar){
           res[i] <- exp( eff[i,3]+ bResVarPred*resVarOnX_c[i])
@@ -216,7 +216,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
         eff[i,1:2] ~ dmnorm(effMeans[1:2], effPrec[1:2,1:2])
       }
     }
-    
+
     if(predX){
       if(fullAD){
         for(i in 1:5){
@@ -233,37 +233,37 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
           xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
-        
+
       }else{
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
           xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
       }
-      
+
     }
-    
-    
-    
-    
+
+
+
+
     if(!randomRes){
       res <- exp(fixRes)
     }
-    
+
     if(predAr){
       bArPred ~ dnorm(0,0.0000001)
       arOnX_c[1:N] <- (arOnX[1:N] -
                          mean(arOnX[1:N]))
-      
+
     }
-    
+
     if(predMean){
       bMeanPred ~ dnorm(0,0.001)
       meanOnX_c[1:N] <- (meanOnX[1:N] -
                            mean(meanOnX[1:N]))
-      
+
     }
-    
+
     if(predResVar){
       if(randomRes){
         bResVarPred ~ dnorm(0,0.0000001)
@@ -271,33 +271,33 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
                                mean(resVarOnX[1:N]))
       }
     }
-    
-    
-    
+
+
+
     effMeans[1] ~ dnorm(0, 0.0000001)
     effMeans[2] ~ dunif(-1,1)
-    
+
     if(randomRes){
-      effMeans[3] ~ dnorm(0, 0.0000001)
+      effMeans[3] ~ dnorm(0, 0.01)
    #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
-      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
+      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1.5, 3)
      # for(nsd in 1:3){
         sds[1] ~ dunif(0,100)
         sds[2] ~ dunif(0,2)
         sds[3] ~ dunif(0,100)
       #}
-      
+
 U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
-      
+
      effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
     }else{
       fixRes ~ dnorm(0, 0.0000001)
       effPrec[1:2,1:2] ~ dwish(effPrecPriorMat[1:2, 1:2], 2)
       effVar[1:2,1:2]  <- inverse(effPrec[1:2,1:2])
     }
-    
-    
+
+
     if(estimateAffectDynamics){
       for(i in 1:N){
         if(randomRes){
@@ -309,41 +309,31 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
         }
       }
     }
-    
+
   })
-  
+
   yLag <- rbind(NA,y[-nTime,])
-  
+
   for(i in 1:ncol(y)){
     yLag[,i] <- yLag[,i] - mean(yLag[,i], na.rm=TRUE)
-    
+
   }
-  
-  lmerShapeDat <- cbind(as.vector(y),as.vector(yLag), rep(1:ncol(y), each=nrow(y)))
-  colnames(lmerShapeDat) <- c("y", "yLag","id")
-  
-  LmerMod <- lmer(y ~ yLag + (yLag|id), data=as.data.frame(lmerShapeDat),
-                  REML = FALSE,
-                  control = lmerControl(optimizer ="bobyqa"))
-  
-  intVarMlEst <- var(ranef(LmerMod)$id[,1])
-  arVarMlEst <- var(ranef(LmerMod)$id[,2])
-  resVarMlEst <- var(resid(LmerMod))
-  
+
+
   dataList <- list("y"=y)
-  
+
   if(constants$predAr){
     dataList$arOnX <- arOnX
   }
-  
+
   if(constants$predMean){
     dataList$meanOnX <- meanOnX
   }
-  
+
   if(constants$predResVar&constants$randomRes){
     dataList$resVarOnX <- resVarOnX
   }
-  
+
   if(constants$predX){
     dataList$xOutcome <- xOutcome
   }
@@ -364,20 +354,18 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
  #     initEffMeans <- c(fixef(LmerMod)[1],fixef(LmerMod)[2])
     }
   }
-  
-  
-  
+
+
+
   if(is.null(inits)){
     inits <- init_randomMLAR(y, xOutcome, nTime, constants)
   }
   if(xOnFullAD){
     inits$bb[5] <- 0
   }
-  inits$U <- chol(solve(inits$effPrec))
-  inits$sds <- sqrt(diag(solve(inits$effPrec)))
-  
+
   monitorPars <- c("effMeans", "b1", "b0", "res", "eff", "effVar")
-  
+
   if(constants$predAr){
     monitorPars <- c(monitorPars, "bArPred")
   }
@@ -394,18 +382,18 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     monitorPars <- c(monitorPars, "mssd", "var")
   }
 #browser()
- 
+
   # compileNimble(uppertri_mult_diag)
   buildMod <- nimbleModel(modelBaseline,
                           data = dataList,
                           constants=constants,
                           inits=inits)
-  
+
   compMod <- compileNimble(buildMod)
   # browser()
-  
+
   mcmcConfig <- configureMCMC(buildMod,print = FALSE, monitors = monitorPars)
-  
+
   # mcmcConfig$removeSampler(c("effMeans"))
   # mcmcConfig$addSampler(type = 'AF_slice',
   #                       target=c("effMeans"),
@@ -413,27 +401,28 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   mcmcConfig$removeSampler(c("effMeans"))
   mcmcConfig$addSampler(type = 'RW_block',
                         target=c("effMeans"),
-                        control=list("propCov"=solve(inits$effPrec),
-                                     tries=3,
-                                     adaptFactorExponent=.2,
-                                     adaptInterval=100))
+                        control=list(tries=3,
+                                     adaptInterval=500,
+                                     adaptFactorExponent=.5))
 
   if(constants$predX){
     mcmcConfig$removeSampler(c("bb"))
     mcmcConfig$addSampler(type = 'RW_block',
                           target=c("bb"),
-                          control=list(tries=3))
+                          control=list(tries=3,
+                                       adaptInterval=500,
+                                       adaptFactorExponent=.5))
   }
 
-  
-  
+
+
   if(constants$predMean){
     mcmcConfig$removeSampler(c("bMeanPred"))
     mcmcConfig$addSampler(type = 'slice',
                           target=c("bMeanPred"),
                           control=list(
                             "adaptInterval"=500))
-    
+
   }
   if(constants$predAr){
     mcmcConfig$removeSampler(c("bArPred"))
@@ -441,7 +430,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bArPred"),
                           control=list(
                             "adaptInterval"=500))
-    
+
   }
   if(constants$predResVar){
     mcmcConfig$removeSampler(c("bResVarPred"))
@@ -449,29 +438,29 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bResVarPred"),
                           control=list(
                             "adaptInterval"=500))
-    
+
   }
-  
-  
-  
-  
-  
+
+
+
+
+
   if(buildOnly){
     mcmcMod <- buildMCMC(mcmcConfig, monitors = buildMod$getNodeNames(stochOnly = TRUE,
                                                                       includeData = FALSE))
   }else{
-    
+
     mcmcMod <- buildMCMC(mcmcConfig, monitors=monitorPars)
   }
-  
-  
+
+
   cMcmcMod <- compileNimble(mcmcMod, project = buildMod)
-  
+
   if(!buildOnly){
     start <- Sys.time()
     samplesList <- runMCMC(cMcmcMod, niter = niter,nburnin = nburnin,
                            nchains = nchains, inits = inits, thin=thin, summary=summary)
-    
+
     finish <- Sys.time()
     runtime <- diff.Date(c(start,finish))
     print(paste("Completed sampling in", runtime))
