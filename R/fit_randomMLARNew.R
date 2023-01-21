@@ -402,15 +402,16 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   mcmcConfig$addSampler(type = 'RW_block',
                         target=c("effMeans"),
                         control=list(tries=3,
-                                     adaptInterval=500,
-                                     adaptFactorExponent=.5))
+                                     propCov=inits$U,
+                                     adaptInterval=100,
+                                     adaptFactorExponent=.2))
 
   if(constants$predX){
     mcmcConfig$removeSampler(c("bb"))
     mcmcConfig$addSampler(type = 'RW_block',
                           target=c("bb"),
                           control=list(tries=3,
-                                       adaptInterval=500,
+                                       adaptInterval=200,
                                        adaptFactorExponent=.5))
   }
 
