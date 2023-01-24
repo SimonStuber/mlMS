@@ -58,7 +58,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
     inits$bb[2] <- 0
     inits$bb[3] <- 0
     inits$bb[1] <- mean(xOutcome)
-    inits$xOutResVar <- var(xOutcome)/1.3
+    inits$xOutResVar <- var(xOutcome)
   }
   return(inits)
 }
