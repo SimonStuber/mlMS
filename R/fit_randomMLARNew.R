@@ -397,23 +397,30 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   # mcmcConfig$removeSampler(c("effMeans"))
   # mcmcConfig$addSampler(type = 'AF_slice',
   #                       target=c("effMeans"),
-  #                       control=list("sliceAdaptFactorInterval"=500))
-  mcmcConfig$removeSampler(c("effMeans"))
-  mcmcConfig$addSampler(type = 'RW_block',
-                        target=c("effMeans"),
-                        control=list(tries=3,
-                                     propCov=inits$U,
-                                     adaptInterval=100,
-                                     adaptFactorExponent=.2))
-
-  if(constants$predX){
-    mcmcConfig$removeSampler(c("bb"))
-    mcmcConfig$addSampler(type = 'RW_block',
-                          target=c("bb"),
-                          control=list(tries=3,
-                                       adaptInterval=200,
-                                       adaptFactorExponent=.5))
-  }
+  # #                       control=list("sliceAdaptFactorInterval"=500))
+  # mcmcConfig$removeSampler(c("effMeans"))
+  # mcmcConfig$addSampler(type = 'RW_block',
+  #                       target=c("effMeans"),
+  #                       control=list(tries=3,
+  #                                    propCov=inits$U,
+  #                                    adaptInterval=500,
+  #                                    adaptFactorExponent=.5))
+  #
+  # # mcmcConfig$removeSampler(c("eff"))
+  # # mcmcConfig$addSampler(type = 'RW_block',
+  # #                       target=c("eff"),
+  # #                       control=list(tries=3,
+  # #                                    adaptInterval=100,
+  # #                                    adaptFactorExponent=.2))
+  #
+  # if(constants$predX){
+  #   mcmcConfig$removeSampler(c("bb"))
+  #   mcmcConfig$addSampler(type = 'RW_block',
+  #                         target=c("bb"),
+  #                         control=list(tries=3,
+  #                                      adaptInterval=500,
+  #                                      adaptFactorExponent=.5))
+  # }
 
 
 
