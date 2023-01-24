@@ -1,3 +1,4 @@
+#function from the nimble user manual
 uppertri_mult_diag <- nimbleFunction(
   run = function(mat = double(2), vec = double(1)) {
     returnType(double(2))
