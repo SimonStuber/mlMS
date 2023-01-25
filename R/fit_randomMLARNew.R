@@ -333,7 +333,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   if(constants$predResVar&constants$randomRes){
     dataList$resVarOnX <- resVarOnX
   }
-
+#
   if(constants$predX){
     dataList$xOutcome <- xOutcome
   }
