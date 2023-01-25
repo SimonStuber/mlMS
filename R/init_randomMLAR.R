@@ -42,7 +42,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   inits$res <- resVar
   inits$sds <- sqrt(c(var(int),var(ar),lv))
 
-  eff <- cbind(inits$b0, inits$b1, log(inits$res))
+  eff <- cbind(inits$b0, inits$b1, exp(inits$res))
 
   if(constants$predAr){
     inits$bArPred <- 0
