@@ -4,14 +4,16 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   int <- c()
   for(i in 1:ncol(y)){
     mod <- ar(y[,i],order.max = 1)
-    resVar[i] <- var(mod$resid, na.rm=TRUE)
+
     if(!length(mod$ar)==0){
       ar[i] <- mod$ar
+      resVar[i] <- var(mod$resid, na.rm=TRUE)
+      int[i] <- mod$x.mean
     }else{
       ar[i] <- 0
+      resVar[i] <- var(y[,i], na.rm=TRUE)
+      int[i] <- mean(y[,i], na.rm=TRUE)
     }
-
-    int[i] <- mod$x.mean
   }
 
   # yLag <- rbind(NA,y[-nTime,])
@@ -42,7 +44,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   inits$res <- resVar
   inits$sds <- sqrt(c(var(int),var(ar),lv))
 
-  eff <- cbind(inits$b0, inits$b1, log(inits$res))
+  inits$eff <- cbind(inits$b0, inits$b1, exp(inits$res))
 
   if(constants$predAr){
     inits$bArPred <- 0
