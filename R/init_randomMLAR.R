@@ -8,7 +8,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
     if(!length(mod$ar)==0){
       ar[i] <- mod$ar
       resVar[i] <- var(mod$resid, na.rm=TRUE)
-      int[i] <- mod$x.mean
+      int[i] <- mean(y[,i], na.rm=TRUE)
     }else{
       ar[i] <- 0
       resVar[i] <- var(y[,i], na.rm=TRUE)
