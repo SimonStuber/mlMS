@@ -31,7 +31,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   # intVarMlEst <- var(int)
   # arVarMlEst <- var(ar)
   # resVarMlEst <- var(resVar)
-#
+##
   lm <- log((mean(resVar)^2)/sqrt((mean(resVar)^2)+(var(resVar))))
   lv <- log(1+((var(resVar))/(mean(resVar)^2)))
   U <- chol(diag(c(var(int),var(ar),lv)))
@@ -45,6 +45,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   inits$sds <- sqrt(c(var(int),var(ar),lv))
 
   inits$eff <- cbind(inits$b0, inits$b1, exp(inits$res))
+
 
   if(constants$predAr){
     inits$bArPred <- 0
