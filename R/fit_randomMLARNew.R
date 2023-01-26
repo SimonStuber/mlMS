@@ -410,7 +410,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                          target=c("eff", "effMeans"),
                          control=list("topNodes"=c("effMeans"),
                                       "adaptFactorExponent"=.8,
-                                      "adaptInterval"=500,
+                                      "adaptInterval"=50,
                                       "propCov"=inits$U%*%t(inits$U)))
   # eff <- c()
   # for(i in 1:N){
@@ -437,7 +437,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bb"),
                           control=list(topNodes="effMeans",
                                        "adaptFactorExponent"=.8,
-                                       "adaptInterval"=500))
+                                       "adaptInterval"=50))
 
 
 
