@@ -404,7 +404,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
    mcmcConfig$removeSampler(c("eff"))
    #mcmcConfig$removeSampler(c("Ustar"))
 
-   mcmcConfig$addSampler(type="RW", target="effMeans[3]", control=list(log=TRUE))
+   mcmcConfig$addSampler(type="RW", target="effMeans[3]")
 
    mcmcConfig$addSampler(type = 'crossLevel',
                          target=c("eff", "effMeans", "bb"),
