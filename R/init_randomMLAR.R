@@ -57,11 +57,13 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
     inits$bMeanPred <- 0
   }
   if(constants$predX){
-    inits$bb[4] <- 0
-    inits$bb[2] <- 0
-    inits$bb[3] <- 0
-    inits$bb[1] <- mean(xOutcome)
-    inits$xOutResVar <- var(xOutcome)
+    bb <- c()
+    bb[1] <- mean(xOutcome)
+    bb[2] <- 0
+    bb[3] <- 0
+    bb[4] <- 0
+    inits$bb <- bb
+    inits$xOutResVar <- 1/var(xOutcome)
   }
   return(inits)
 }
