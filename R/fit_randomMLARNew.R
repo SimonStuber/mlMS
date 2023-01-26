@@ -410,7 +410,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
    mcmcConfig$addSampler(type = 'RW_block_lkj_corr_cholesky',
                          target=c("Ustar"),
                          control=list("topNodes"=c("effMeans"),
-                                      "adaptFactorExponent"=.8,
+                                      "adaptFactorExponent"=.2,
                                       "adaptInterval"=50,
                                       "scale"=0.2))
 
