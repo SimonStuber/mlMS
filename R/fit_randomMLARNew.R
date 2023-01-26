@@ -402,10 +402,10 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
   mcmcConfig$removeSampler(c("bb"))
    mcmcConfig$removeSampler(c("eff"))
-   mcmcConfig$removeSampler(c("Ustar"))
+   #mcmcConfig$removeSampler(c("Ustar"))
 
    mcmcConfig$addSampler(type = 'crossLevel',
-                         target=c("eff", "effMeans", "bb", "Ustar"),
+                         target=c("eff", "effMeans", "bb"),
                          control=list("topNodes"=c("effMeans","Ustar")))
   # eff <- c()
   # for(i in 1:N){
