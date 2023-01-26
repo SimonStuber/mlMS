@@ -410,7 +410,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                          target=c("eff", "effMeans", "bb"),
                          control=list("topNodes"=c("effMeans"),
                                       "adaptFactorExponent"=.9,
-                                      "adaptInterval"=500))
+                                      "adaptInterval"=100))
   # eff <- c()
   # for(i in 1:N){
   #   eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
