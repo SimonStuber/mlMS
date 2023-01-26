@@ -435,7 +435,9 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     mcmcConfig$removeSampler(c("bb"))
     mcmcConfig$addSampler(type = 'crossLevel',
                           target=c("bb"),
-                          control=list(topNodes="effMeans"))
+                          control=list(topNodes="effMeans",
+                                       "adaptFactorExponent"=.8,
+                                       "adaptInterval"=500))
 
 
 
