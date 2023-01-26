@@ -407,10 +407,10 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
    # mcmcConfig$addSampler(type="RW", target="effMeans[3]")
 
    mcmcConfig$addSampler(type = 'crossLevel',
-                         target=c("eff", "effMeans", "bb"),
+                         target=c("eff", "effMeans"),
                          control=list("topNodes"=c("effMeans"),
-                                      "adaptFactorExponent"=.9,
-                                      "adaptInterval"=100))
+                                      "adaptFactorExponent"=.8,
+                                      "adaptInterval"=500))
   # eff <- c()
   # for(i in 1:N){
   #   eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
@@ -430,17 +430,15 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   # #                                    adaptInterval=100,
   # #                                    adaptFactorExponent=.2))
   # #
-  # if(constants$predX){
-  #   mcmcConfig$removeSampler(c("bb"))
-  #   mcmcConfig$addSampler(type = 'RW_block',
-  #                         target=c("bb"),
-  #                         control=list(tries=1,
-  #                                      adaptInterval=300,
-  #                                      adaptFactorExponent=10))
-  #
-  #
-  #
-  #  }
+  if(constants$predX){
+    mcmcConfig$removeSampler(c("bb"))
+    mcmcConfig$addSampler(type = 'crossLevel',
+                          target=c("bb"),
+                          control=list(topNodes="effMeans"))
+
+
+
+   }
 
 
 
