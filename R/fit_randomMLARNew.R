@@ -402,9 +402,17 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
   mcmcConfig$removeSampler(c("bb"))
    mcmcConfig$removeSampler(c("eff"))
-   #mcmcConfig$removeSampler(c("Ustar"))
+   mcmcConfig$removeSampler(c("Ustar"))
 
    # mcmcConfig$addSampler(type="RW", target="effMeans[3]")
+
+
+   mcmcConfig$addSampler(type = 'RW_block_lkj_corr_cholesky',
+                         target=c("Ustar"),
+                         control=list("topNodes"=c("effMeans"),
+                                      "adaptFactorExponent"=.8,
+                                      "adaptInterval"=50,
+                                      "scale"=0.2))
 
    mcmcConfig$addSampler(type = 'crossLevel',
                          target=c("eff", "effMeans"),
