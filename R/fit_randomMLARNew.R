@@ -403,8 +403,8 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                         target=c("effMeans"),
                         control=list(tries=1,
                                      propCov=inits$U%*%t(inits$U),
-                                     adaptInterval=130,
-                                     adaptFactorExponent=.9))
+                                     adaptInterval=1000,
+                                     adaptFactorExponent=.95))
 
    mcmcConfig$removeSampler(c("eff"))
   eff <- c()
@@ -412,10 +412,10 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
     mcmcConfig$addSampler(type = 'RW_block',
                           target=c(eff[i]),
-                          control=list(tries=2,
+                          control=list(tries=1,
                                        propCov=diag(inits$eff[i,]),
-                                       adaptFactorExponent=.9,
-                                       adaptInterval=150))
+                                       adaptFactorExponent=.95,
+                                       adaptInterval=1000))
   }
 
   #
@@ -431,8 +431,8 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     mcmcConfig$addSampler(type = 'RW_block',
                           target=c("bb"),
                           control=list(tries=1,
-                                       adaptInterval=500,
-                                       adaptFactorExponent=.7))
+                                       adaptInterval=1000,
+                                       adaptFactorExponent=.95))
 
 
    }
