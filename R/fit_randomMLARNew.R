@@ -394,10 +394,10 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
   mcmcConfig <- configureMCMC(buildMod,print = FALSE, monitors = monitorPars)
 
-  # mcmcConfig$removeSampler(c("effMeans"))
-  # mcmcConfig$addSampler(type = 'AF_slice',
-  #                       target=c("effMeans"),
-  # #                       control=list("sliceAdaptFactorInterval"=500))
+  mcmcConfig$removeSampler(c("eff"))
+  mcmcConfig$addSampler(type = 'AF_slice',
+                        target=c("eff"))
+  #                       control=list("sliceAdaptFactorInterval"=500))
   mcmcConfig$removeSampler(c("effMeans"))
   mcmcConfig$addSampler(type = 'AF_slice',
                         target=c("effMeans"))
