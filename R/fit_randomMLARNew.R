@@ -411,14 +411,14 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                          target=c("Ustar"),
                          control=list("topNodes"=c("effMeans"),
                                       "adaptFactorExponent"=.8,
-                                      "adaptInterval"=50,
+                                      "adaptInterval"=30,
                                       "scale"=0.2))
 
    mcmcConfig$addSampler(type = 'crossLevel',
                          target=c("eff", "effMeans"),
                          control=list("topNodes"=c("effMeans"),
                                       "adaptFactorExponent"=.8,
-                                      "adaptInterval"=50,
+                                      "adaptInterval"=30,
                                       "propCov"=inits$U%*%t(inits$U)))
   # eff <- c()
   # for(i in 1:N){
@@ -445,7 +445,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bb"),
                           control=list(topNodes="effMeans",
                                        "adaptFactorExponent"=.8,
-                                       "adaptInterval"=50,
+                                       "adaptInterval"=30,
                                        "propCov"=inits$U%*%t(inits$U)))
 
 
