@@ -171,10 +171,10 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
       for(i in 1:N){
         yhat[firstT[i],i] <- b0[i]
         resStart[i] <- res[i]/(1-(b1[i]^2))
-        y[firstT[i], i] ~ dnorm(yhat[firstT[i],i], sd=sqrt(resStart[i]))
+        y[firstT[i], i] ~ dnorm(yhat[firstT[i],i], var=resStart[i])
         for(t in (firstT[i]+1):lastT[i]){
           yhat[t,i] <- b0[i] + b1[i]*(y[t-1,i] - b0[i])
-          y[t, i] ~ dnorm(yhat[t,i], sd=sqrt(res[i]))
+          y[t, i] ~ dnorm(yhat[t,i], var=res[i])
         }
       }
 
@@ -182,10 +182,10 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
       for(i in 1:N){
         yhat[firstT[i],i] <- b0Start[i]
         resStart[i] <- res/(1-(b1[i]^2))
-        y[firstT[i], i] ~ dnorm(yhat[firstT[i],i], sd=sqrt(resStart[i]))
+        y[firstT[i], i] ~ dnorm(yhat[firstT[i],i], var=resStart[i])
         for(t in (firstT[i]+1):lastT[i]){
           yhat[t,i] <- b0[i] + b1[i]*(y[t-1,i] - b0[i])
-          y[t, i] ~ dnorm(yhat[t,i], sd=sqrt(res))
+          y[t, i] ~ dnorm(yhat[t,i], var=res)
         }
       }
     }
