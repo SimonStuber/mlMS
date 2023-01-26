@@ -403,8 +403,10 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
    mcmcConfig$removeSampler(c("eff"))
 
-   mcmcConfig$addSampler(type = 'AF_slice',
-                         target=c("effMeans", "eff"))
+
+   mcmcConfig$addSampler(type = 'crossLevel',
+                         target=c("eff", "effMeans", "bb"),
+                         control=list("topNodes"=effMeans))
   # eff <- c()
   # for(i in 1:N){
   #   eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
