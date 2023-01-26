@@ -405,6 +405,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                                      propCov=inits$U%*%t(inits$U),
                                      adaptInterval=80,
                                      adaptFactorExponent=.8))
+
    mcmcConfig$removeSampler(c("eff"))
   eff <- c()
   for(i in 1:N){
