@@ -290,7 +290,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
 
-    # effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
+     effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
     }else{
       fixRes ~ dnorm(0, 0.0000001)
       effPrec[1:2,1:2] ~ dwish(effPrecPriorMat[1:2, 1:2], 2)
