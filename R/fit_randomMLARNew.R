@@ -399,20 +399,22 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   #                       target=c("eff")),
   #                       control=list("sliceAdaptFactorInterval"=500))
   mcmcConfig$removeSampler(c("effMeans"))
-  mcmcConfig$addSampler(type = 'AF_slice',
-                        target=c("effMeans"))
+
 
    mcmcConfig$removeSampler(c("eff"))
-  eff <- c()
-  for(i in 1:N){
-    eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
-    mcmcConfig$addSampler(type = 'RW_block',
-                          target=c(eff[i]),
-                          control=list(tries=1,
-                                       propCov=diag(inits$eff[i,]),
-                                       adaptFactorExponent=10,
-                                       adaptInterval=300))
-  }
+
+   mcmcConfig$addSampler(type = 'AF_slice',
+                         target=c("effMeans", "eff"))
+  # eff <- c()
+  # for(i in 1:N){
+  #   eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
+  #   mcmcConfig$addSampler(type = 'RW_block',
+  #                         target=c(eff[i]),
+  #                         control=list(tries=1,
+  #                                      propCov=diag(inits$eff[i,]),
+  #                                      adaptFactorExponent=10,
+  #                                      adaptInterval=300))
+  # }
 
   #
   # # mcmcConfig$removeSampler(c("eff"))
