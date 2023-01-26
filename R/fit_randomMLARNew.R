@@ -410,14 +410,14 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
    mcmcConfig$addSampler(type = 'RW_block_lkj_corr_cholesky',
                          target=c("Ustar"),
                          control=list("topNodes"=c("effMeans"),
-                                      "adaptFactorExponent"=.2,
+                                      "adaptFactorExponent"=.9,
                                       "adaptInterval"=50,
                                       "scale"=0.2))
 
    mcmcConfig$addSampler(type = 'crossLevel',
                          target=c("eff", "effMeans"),
                          control=list("topNodes"=c("effMeans"),
-                                      "adaptFactorExponent"=.8,
+                                      "adaptFactorExponent"=.9,
                                       "adaptInterval"=50,
                                       "propCov"=inits$U%*%t(inits$U)))
   # eff <- c()
@@ -444,8 +444,9 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     mcmcConfig$addSampler(type = 'crossLevel',
                           target=c("bb"),
                           control=list(topNodes="effMeans",
-                                       "adaptFactorExponent"=.8,
-                                       "adaptInterval"=50))
+                                       "adaptFactorExponent"=.9,
+                                       "adaptInterval"=50,
+                                       "propCov"=inits$U%*%t(inits$U)))
 
 
 
