@@ -404,7 +404,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                         control=list(tries=1,
                                      propCov=inits$U%*%t(inits$U),
                                      adaptInterval=300,
-                                     adaptFactorExponent=.99))
+                                     adaptFactorExponent=10))
 
    mcmcConfig$removeSampler(c("eff"))
   eff <- c()
@@ -414,7 +414,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c(eff[i]),
                           control=list(tries=1,
                                        propCov=diag(inits$eff[i,]),
-                                       adaptFactorExponent=.99,
+                                       adaptFactorExponent=10,
                                        adaptInterval=300))
   }
 
@@ -432,7 +432,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bb"),
                           control=list(tries=1,
                                        adaptInterval=300,
-                                       adaptFactorExponent=.99))
+                                       adaptFactorExponent=10))
 
 
 
