@@ -220,24 +220,24 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
     if(predX){
       if(fullAD){
         for(i in 1:5){
-          bb[i] ~ dnorm(0,.000001)
+          bb[i] ~ dnorm(0,.001)
         }
       }else{
         for(i in 1:4){
-          bb[i] ~ dnorm(0,.000001)
+          bb[i] ~ dnorm(0,.001)
         }
       }
       xOutResVar ~ dunif(0,100)
       if(fullAD){
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
-          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], sd=xOutResVar)
         }
 
       }else{
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
-          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], sd=xOutResVar)
         }
       }
 
@@ -251,7 +251,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
     }
 
     if(predAr){
-      bArPred ~ dnorm(0,0.0000001)
+      bArPred ~ dnorm(0,0.001)
       arOnX_c[1:N] <- (arOnX[1:N] -
                          mean(arOnX[1:N]))
 
@@ -266,7 +266,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 
     if(predResVar){
       if(randomRes){
-        bResVarPred ~ dnorm(0,0.0000001)
+        bResVarPred ~ dnorm(0,0.001)
         resVarOnX_c[1:N] <- (resVarOnX[1:N] -
                                mean(resVarOnX[1:N]))
       }
@@ -274,11 +274,11 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 
 
 
-    effMeans[1] ~ dnorm(0, 0.0000001)
+    effMeans[1] ~ dnorm(0, 0.001)
     effMeans[2] ~ dunif(-1,1)
 
     if(randomRes){
-      effMeans[3] ~ dnorm(0, 0.01)
+      effMeans[3] ~ dnorm(0, 0.001)
    #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
       Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
      # for(nsd in 1:3){
@@ -290,7 +290,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
 
-     effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
+    # effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
     }else{
       fixRes ~ dnorm(0, 0.0000001)
       effPrec[1:2,1:2] ~ dwish(effPrecPriorMat[1:2, 1:2], 2)
