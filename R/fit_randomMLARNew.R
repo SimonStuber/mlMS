@@ -231,13 +231,13 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
       if(fullAD){
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
-          xOutcome[i] ~ dnorm(xOutHat[i], sd=xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
 
       }else{
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
-          xOutcome[i] ~ dnorm(xOutHat[i], sd=xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
       }
 
@@ -280,7 +280,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
     if(randomRes){
       effMeans[3] ~ dnorm(0, 0.001)
    #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
-      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
+      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1.3, 3)
      # for(nsd in 1:3){
         sds[1] ~ dunif(0,100)
         sds[2] ~ dunif(0,2)
@@ -404,7 +404,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                         control=list(tries=1,
                                      propCov=inits$U%*%t(inits$U),
                                      adaptInterval=1000,
-                                     adaptFactorExponent=.95))
+                                     adaptFactorExponent=.9))
 
    mcmcConfig$removeSampler(c("eff"))
   eff <- c()
@@ -414,7 +414,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c(eff[i]),
                           control=list(tries=1,
                                        propCov=diag(inits$eff[i,]),
-                                       adaptFactorExponent=.95,
+                                       adaptFactorExponent=.9,
                                        adaptInterval=1000))
   }
 
@@ -432,7 +432,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           target=c("bb"),
                           control=list(tries=1,
                                        adaptInterval=1000,
-                                       adaptFactorExponent=.95))
+                                       adaptFactorExponent=.9))
 
 
    }
