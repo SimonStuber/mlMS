@@ -425,12 +425,11 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
   # #
   if(constants$predX){
     mcmcConfig$removeSampler(c("bb"))
-    mcmcConfig$addSampler(type = 'AF_slice',
-                          target=c("bb"))
-    # ,
-    #                       control=list(tries=1,
-    #                                    adaptInterval=100,
-    #                                    adaptFactorExponent=.2))
+    mcmcConfig$addSampler(type = 'RW_block',
+                          target=c("bb"),
+                          control=list(tries=1,
+                                       adaptInterval=100,
+                                       adaptFactorExponent=.2))
 
 
    }
