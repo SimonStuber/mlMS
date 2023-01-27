@@ -390,9 +390,9 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           inits=inits)
 
   compMod <- compileNimble(buildMod)
-  # browser()
+   browser()
 
-  mcmcConfig <- configureMCMC(buildMod,print = FALSE, monitors = monitorPars)
+  mcmcConfig <- configureMCMC(buildMod,print = TRUE, monitors = monitorPars)
 
   # mcmcConfig$removeSampler(c("eff"))
   # mcmcConfig$addSampler(type = 'AF_slice',
