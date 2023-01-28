@@ -3,7 +3,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   ar <- c()
   int <- c()
   for(i in 1:ncol(y)){
-    mod <- ar(y[,i],order.max = 1)
+    mod <- ar(y[,i],order.max = 1, aic=FALSE, method="ols")
 
     if(!length(mod$ar)==0){
       ar[i] <- mod$ar
@@ -34,17 +34,27 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
 ##
   lm <- log((mean(resVar)^2)/sqrt((mean(resVar)^2)+(var(resVar))))
   lv <- log(1+((var(resVar))/(mean(resVar)^2)))
-  U <- chol(diag(c(var(int),var(ar),lv)))
+
+  b0 <- int
+  b1 <- ar
+  res <- resVar
+  sds <- sqrt(c(var(int),var(ar),lv))
+
+  eff <- cbind(b0, b1, log(res))
+  covMat <- cov(eff)
+  diag(covMat) <- sds^2
+  U <- chol(covMat)
+
   inits <- list(effMeans=c(mean(int),mean(ar),lm),
                 U=U,
-                Ustar=U/sqrt(c(var(int),var(ar),lv)))
+                Ustar=U/sds,
+                b0=b0,
+                b1=b1,
+                res=res,
+                sds=sds,
+                eff=eff)
 
-  inits$b0 <- int
-  inits$b1 <- ar
-  inits$res <- resVar
-  inits$sds <- sqrt(c(var(int),var(ar),lv))
 
-  inits$eff <- cbind(inits$b0, inits$b1, log(inits$res))
 
 
   if(constants$predAr){

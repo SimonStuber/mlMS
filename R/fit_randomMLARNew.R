@@ -236,7 +236,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 
       }else{
         for(i in 1:N){
-          xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
+          xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(eff[i,3]-mean(eff[1:N,3]))
           xOutcome[i] ~ dnorm(xOutHat[i], xOutResVar)
         }
       }
@@ -280,7 +280,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
     if(randomRes){
       effMeans[3] ~ dnorm(0, 0.001)
    #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
-      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1.3, 3)
+      Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
      # for(nsd in 1:3){
         sds[1] ~ dunif(0,100)
         sds[2] ~ dunif(0,2)
@@ -290,7 +290,7 @@ fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
 U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
 
 
-     effVar[1:3,1:3] <-U[1:3,1:3]%*%t(U[1:3,1:3])
+     effVar[1:3,1:3] <- t(U[1:3,1:3])%*%(U[1:3,1:3])
     }else{
       fixRes ~ dnorm(0, 0.0000001)
       effPrec[1:2,1:2] ~ dwish(effPrecPriorMat[1:2, 1:2], 2)
@@ -390,7 +390,7 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
                           inits=inits)
 
   compMod <- compileNimble(buildMod)
-   browser()
+  # browser()
 
   mcmcConfig <- configureMCMC(buildMod,print = TRUE, monitors = monitorPars)
 
@@ -404,29 +404,60 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
    mcmcConfig$removeSampler(c("eff"))
    mcmcConfig$removeSampler(c("Ustar"))
 
-   #mcmcConfig$addSampler(type="RW", target="effMeans[3]")
-
 
    mcmcConfig$addSampler(type = 'RW_block_lkj_corr_cholesky',
                          target=c("Ustar"),
-                         control=list("adaptFactorExponent"=.95,
-                                      "adaptInterval"=50))
+                         control=list("adaptFactorExponent"=.5,
+                                      "adaptInterval"=500,
+                                      "tries"=1))
 
-   mcmcConfig$addSampler(type = 'crossLevel',
-                         target=c("eff", "effMeans"),
-                         control=list("topNodes"=c("effMeans"),
-                                      "adaptFactorExponent"=.95,
-                                      "adaptInterval"=50))
-  # eff <- c()
-  # for(i in 1:N){
-  #   eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
-  #   mcmcConfig$addSampler(type = 'RW_block',
-  #                         target=c(eff[i]),
-  #                         control=list(tries=1,
-  #                                      propCov=diag(inits$eff[i,]),
-  #                                      adaptFactorExponent=10,
-  #                                      adaptInterval=300))
-  # }
+
+# mcmcConfig$addSampler(type = 'RW_wishart',
+#                       target=c("Ustar"),
+#                       control=list("adaptFactorExponent"=.01,
+#                                    "adaptInterval"=200,
+#                                    "tries"=1))
+
+   mcmcConfig$addSampler(type = 'RW',
+                         target=c("Ustar[3 ,3]"),
+                         control=list("adaptFactorExponent"=.01,
+                                      "adaptInterval"=100,
+                                      "tries"=1))
+
+
+
+   mcmcConfig$addSampler(type = 'RW_block',
+                         target=c("effMeans"),
+                         control=list("adaptFactorExponent"=.8,
+                                      "tries"=3,
+                                      "adaptInterval"=1000,
+                                      "propCov"=inits$U%*%t(inits$U)))
+
+
+   mcmcConfig$addSampler(type="RW",
+                         target="effMeans[3]",
+                         control=list("adaptFactorExponent"=.1,
+                                    "tries"=3,
+                                    "adaptInterval"=100,
+                                    "scale"=inits$effMeans[3]))
+
+
+  eff <- c()
+  eff3 <- c()
+  for(i in 1:N){
+    eff[i] <- paste("eff[",i," ,", "1:3]", sep="")
+    eff3[i] <- paste("eff[",i," ,", "3]", sep="")
+    mcmcConfig$addSampler(type = 'RW_block',
+                          target=c(eff[i]),
+                          control=list(tries=1,
+                                       propCov=inits$U%*%t(inits$U),
+                                       adaptFactorExponent=.8,
+                                       adaptInterval=100))
+    mcmcConfig$addSampler(type="RW",
+                          target=eff3[i],
+                          control=list(scale=inits$eff[i, 3],
+                                       adaptInterval=500))
+  }
 
   #
   # # mcmcConfig$removeSampler(c("eff"))
@@ -441,11 +472,11 @@ U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
     mcmcConfig$addSampler(type = 'crossLevel',
                           target=c("bb"),
                           control=list(topNodes="effMeans",
-                                       "adaptFactorExponent"=.95,
-                                       "adaptInterval"=50))
+                                       "adaptFactorExponent"=.2,
+                                       "adaptInterval"=1500))
 
-
-
+    mcmcConfig$addSampler(type = 'AF_slice',
+                          target=c("bb"))
    }
 
 
