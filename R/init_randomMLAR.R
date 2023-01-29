@@ -69,9 +69,9 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   if(constants$predX){
     bb <- c()
     bb[1] <- mean(xOutcome)
-    bb[2] <- 0
-    bb[3] <- 0
-    bb[4] <- 0
+    bb[2] <- cor(int, xOutcome)*sds[1]
+    bb[3] <- cor(ar, xOutcome)*sds[2]
+    bb[4] <- cor(resVar, xOutcome)*sds[3]
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }
