@@ -14,7 +14,7 @@
 
 
 
-fit_mlMSVAR <- function(simdat, M, randomEffects="transition_probabilities",
+fit_mlHMM <- function(simdat, M, randomEffects="transition_probabilities",
                         niter=10000, nburnin=.5, inits=NULL, thin=1,
                         nVars, nchains=2,forwardAlgorithm=TRUE,particleFilter=FALSE,
                         ncores=2, neff=10, rhat=1.1,resetSamplerRate=50){
@@ -43,9 +43,9 @@ nVars <- nVars
        for(i in 1:N){
 
          if(forwardAlgorithm){
-           y[1:nTime, i, 1:nVars] ~ dForProbsMSVARnew(probs1 = probs1[1:M],
+           y[1:nTime, i, 1:nVars] ~ dForProbsHMM(probs1 = probs1[1:M],
                                                       y.hat.err=resCov2[i,1:(nVars*nVars),1:M],
-                                                      b=bRaneff[i,1:(nVars*nVars),1:M],
+                                                #      b=bRaneff[i,1:(nVars*nVars),1:M],
                                                       b1=b1[i,1:nVars,1:M],
                                                       # b1.1=b1.1.means[1:nVars,1:M],
                                                       # resCov1=resCov1.1[1:(nVars*nVars),1:M],
@@ -99,7 +99,7 @@ nVars <- nVars
       for(i in 1:N){
         for(state in 1:M){
          # allB[i,1:((nVars*nVars)+nVars),state] ~ dmnorm(b)
-            bRaneff[i,1:(nVars*nVars),state] ~ dmnorm(b.means[1:(nVars*nVars),state], cov=b.prec[1:(nVars*nVars),1:(nVars*nVars),state])
+         #   bRaneff[i,1:(nVars*nVars),state] ~ dmnorm(b.means[1:(nVars*nVars),state], cov=b.prec[1:(nVars*nVars),1:(nVars*nVars),state])
            # constraint_data ~ dconstraint(max(abs(bRaneff[i,1:(nVars*nVars),state]))< 1 )
           for(v in 1:nVars){
               b1[i,v,state] ~ dnorm(b1.means[v,state], var=b1.prec[v,state])
@@ -129,11 +129,11 @@ nVars <- nVars
           }
         }
 
-      for(state in 1:M){
-        for(eff in 1:(nVars*nVars)){
-          b.means[eff,state] ~ T(dnorm(0,.001),-.99,.99)
-        }
-      }
+      # for(state in 1:M){
+      #   for(eff in 1:(nVars*nVars)){
+      #     b.means[eff,state] ~ T(dnorm(0,.001),-.99,.99)
+      #   }
+      # }
 
 
 
@@ -141,7 +141,7 @@ nVars <- nVars
 
 
       for(state in 1:M){
-        b.prec[1:(nVars*nVars),1:(nVars*nVars),state] ~ dinvwish(mat1[1:(nVars*nVars), 1:(nVars*nVars),state],(nVars*nVars))
+     #   b.prec[1:(nVars*nVars),1:(nVars*nVars),state] ~ dinvwish(mat1[1:(nVars*nVars), 1:(nVars*nVars),state],(nVars*nVars))
         for(v in 1:nVars){
           b1.prec[v,state] ~ dinvgamma(.1, .1)
         }
@@ -295,23 +295,23 @@ nTime <- dim(simdat)[1]
       inits <- init_mlMSVAR(simdat,M, forwardAlgorithm = forwardAlgorithm, particleFilter = particleFilter)
     }
 
-mat1 <- inits$b.prec
+#mat1 <- inits$b.prec
 matScale <- inits$scaleResCov
 for(state in 1:M){
-  mat1[,,state] <- diag(diag(inits$b.prec[,,state]))
+ # mat1[,,state] <- diag(diag(inits$b.prec[,,state]))
   matScale[,,state] <- diag(diag(inits$scaleResCov[,,state]))
 }
 
 dataList <- list("y"=simdat,
                  "start.alphas"=rep(1,M),
                  "v.Om" = diag((M*M-M)),
-                 "mat1"=mat1,
+                # "mat1"=mat1,
                  "matScale"=matScale)
 constantsList <- list("M"=M, "nTime"=dim(simdat)[1],
                       "N"=dim(simdat)[2],
                       "nVars"=nVars,
                       "forwardAlgorithm"=forwardAlgorithm)
-parameters <- c("dfResCov","b.means", "b1.means", "meanResCov", "varResCov","v.means", "bRaneff", "b1", "resCov", "probs", "probs1")
+parameters <- c("dfResCov", "b1.means", "meanResCov", "varResCov","v.means", "b1", "resCov", "probs", "probs1")
 
 if(ncores==1){
   print("The model will be estimated with only 1 core. This is not adviced.
@@ -329,7 +329,7 @@ clusterExport(cl, c("modelBaseline", "inits", "dataList", "constantsList","param
                     "niter", "thin","ni","par.ignore.Rht","nc","nb","mod.nam",
                     "max.samples.saved","rtrn.model","sav.model","Rht.required",
                     "neff.required",
-                    "dForProbsMSVARnew", "makeMat", "makeSingleMat", "lse",
+                    "dForProbsHMM", "makeMat", "makeSingleMat", "lse",
                     "init_mlMSVAR", "particleFilter"),envir=environment())
 
 for (j in seq_along(cl)) {
@@ -529,7 +529,7 @@ out1 <- clusterEvalQ(cl, {
                                             "maxContractions"=500))
 
 
-    AFSS_mcmcConfig$removeSampler(c("resCov", "bRaneff", "b1", "scaleResCov"))#,
+    AFSS_mcmcConfig$removeSampler(c("resCov", "b1", "scaleResCov"))#,
 
     b1Target <- matrix(NA, constantsList$N,constantsList$M)
     b1MeansTarget <- c()
@@ -551,25 +551,25 @@ out1 <- clusterEvalQ(cl, {
       }
     }
 
-    bRaneffTarget <- matrix(NA, constantsList$N,constantsList$M)
+    #bRaneffTarget <- matrix(NA, constantsList$N,constantsList$M)
     bMeansTarget <- c()
     bPrecTarget <- c()
 
-    for(state in 1:constantsList$M){
-      for(i in 1:constantsList$N){
-        bRaneffTarget[i,state] <- paste("bRaneff[",i, ", 1:", constantsList$nVars*constantsList$nVars, ", ", state, "]", sep="")
-      }
-    }
-
-
-    for(i in 1:constantsList$N){
-      for(state in 1:constantsList$M){
-        AFSS_mcmcConfig$addSampler(type = 'RW_block',
-                                   target=c(bRaneffTarget[i,state]),
-                                   control=list("adaptInterval"=500,
-                                                "adaptFactorExponent"=.5))
-      }
-    }
+    # for(state in 1:constantsList$M){
+    #   for(i in 1:constantsList$N){
+    #     bRaneffTarget[i,state] <- paste("bRaneff[",i, ", 1:", constantsList$nVars*constantsList$nVars, ", ", state, "]", sep="")
+    #   }
+    # }
+    #
+    #
+    # for(i in 1:constantsList$N){
+    #   for(state in 1:constantsList$M){
+    #     AFSS_mcmcConfig$addSampler(type = 'RW_block',
+    #                                target=c(bRaneffTarget[i,state]),
+    #                                control=list("adaptInterval"=500,
+    #                                             "adaptFactorExponent"=.5))
+    #   }
+    # }
 
     target <- array(NA, c(constantsList$N,constantsList$M))
     for(i in 1:constantsList$N){
@@ -598,7 +598,7 @@ out1 <- clusterEvalQ(cl, {
                                               "adaptFactorExponent"=.5))
     }
 
-    AFSS_mcmcConfig$addMonitors(c('meanResCov', 'varResCov',"b1", "resCov", "bRaneff", "probs","probs1"))
+    AFSS_mcmcConfig$addMonitors(c('meanResCov', 'varResCov',"b1", "resCov", "probs","probs1"))
 
     mcmcMod<- buildMCMC(AFSS_mcmcConfig)
 
