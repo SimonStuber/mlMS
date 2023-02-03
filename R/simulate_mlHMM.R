@@ -4,7 +4,7 @@ simulate_mlHMM <- function(probs1,  n, nTime,nItems,
                          b1.means, b1.sd,
                          v.means, v.cov, dfResCov, scaleResCov){
 
- # browser()
+ #browser()
 
   nTime <- nTime +100
 

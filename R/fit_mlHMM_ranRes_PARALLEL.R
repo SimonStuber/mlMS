@@ -292,7 +292,7 @@ nTime <- dim(simdat)[1]
    # matScale <- diag(nVars)
 
     if(is.null(inits)){
-      inits <- init_mlMSVAR(simdat,M, forwardAlgorithm = forwardAlgorithm, particleFilter = particleFilter)
+      inits <- init_mlHMM(simdat,M, forwardAlgorithm = forwardAlgorithm, particleFilter = particleFilter)
     }
 
 #mat1 <- inits$b.prec
@@ -330,7 +330,7 @@ clusterExport(cl, c("modelBaseline", "inits", "dataList", "constantsList","param
                     "max.samples.saved","rtrn.model","sav.model","Rht.required",
                     "neff.required",
                     "dForProbsHMM", "makeMat", "makeSingleMat", "lse",
-                    "init_mlMSVAR", "particleFilter"),envir=environment())
+                    "init_mlHMM", "particleFilter"),envir=environment())
 
 for (j in seq_along(cl)) {
   set.seed(j)

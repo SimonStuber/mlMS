@@ -81,7 +81,10 @@ for(i in 1:n){
   }
 
   a <- array(NA, c(n,M, nTime))
+  a <- array(NA, c(n,2, nTime))
   vInit <- array(0, c(n,M,M))
+
+  #km.res[[i]]$cluster
 
   for(i in 1:n){
     #browser()
@@ -97,13 +100,23 @@ for(i in 1:n){
     for(t in 2:(nTime)){
       vInit[rbind(c(i,a[i,,t]))] <- vInit[rbind(c(i,a[i,,t]))] + 1
     }
+
+    if(sum(vInit[i,,]<(rowSums(vInit[i,,])/100))>0){
+      #   browser()
+      vInit[i,,][vInit[i,,]<(rowSums(vInit[i,,])/100)] <- matrix(rowSums(vInit[i,,]),M,M)[vInit[i,,]<(rowSums(vInit[i,,])/100)]
+    }
+
     vInit[i,,] <-(vInit[i,,]/rowSums(vInit[i,,]))
-    diag(vInit[i,,]) <- 1/M
-    vInit[i,,] <- vInit[i,,]+(1/M)
-    vInit[i,,] <- log(vInit[i,,])
+    #diag(vInit[i,,]) <- 1/M
+    #vInit[i,,] <- vInit[i,,]+(1/M)
+
+    vInit[i,,] <- log(vInit[i,,]/diag(vInit[i,,]))
+
     diag(vInit[i,,]) <- NA
     vInit[i,,] <- t(vInit[i,,])
   }
+
+
 
   vMean <- apply(vInit,2:3, mean)
   vCov <- apply(vInit,2:3, var)
@@ -132,7 +145,7 @@ for(i in 1:n){
     dfResCov=ifelse(((km.all$size/(n*nTime))*(n+nVars)*M)>(nVars+4),
                     ((km.all$size/(n*nTime))*(n+nVars)*M),nVars+4),
     resCov = resCovInit,
-    raneffs=array(vInit[!is.na(vInit)],c(n,M)))
+    raneffs=array(vInit[!is.na(vInit)],c(n,M*M-M)))
 
   if(!forwardAlgorithm&!particleFilter){
     inits$mm <- mm
