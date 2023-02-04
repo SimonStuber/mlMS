@@ -1,4 +1,4 @@
-init_randomMLAR <- function(y, xOutcome,nTime, constants){
+init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   resVar <- c()#
   ar <- c()
   int <- c()
@@ -31,28 +31,32 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   # intVarMlEst <- var(int)
   # arVarMlEst <- var(ar)
   # resVarMlEst <- var(resVar)
-##
-  lm <- log((mean(resVar)^2)/sqrt((mean(resVar)^2)+(var(resVar))))
-  lv <- log(1+((var(resVar))/(mean(resVar)^2)))
+  ##
+  #lm <- log((mean(resVar)^2)/sqrt((mean(resVar)^2)+(var(resVar))))
+  #lv <- log(1+((var(resVar))/(mean(resVar)^2)))
 
   b0 <- int
   b1 <- ar
   res <- resVar
-  sds <- sqrt(c(var(int),var(ar),lv))
-
-  eff <- cbind(b0, b1, log(res))
+  sds <- sqrt(c(var(int),var(ar)))
+  res.mean <- mean(res)
+  res.sd <- sd(res)
+  eff <- cbind(b0, b1)
   covMat <- cov(eff)
   diag(covMat) <- sds^2
-  U <- chol(covMat)
+  # U <- chol(covMat)
 
-  inits <- list(effMeans=c(mean(int),mean(ar),lm),
-                U=U,
-                Ustar=U/sds,
+  inits <- list(effMeans=c(mean(int),mean(ar)),
+                U=covMat,
+                # Ustar=U/sds,
                 b0=b0,
                 b1=b1,
                 res=res,
                 sds=sds,
-                eff=eff)
+                eff=eff,
+                effC=cov(b0, b1),
+                res.mean=res.mean,
+                res.sd=res.sd)
 
 
 
@@ -69,9 +73,9 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
   if(constants$predX){
     bb <- c()
     bb[1] <- mean(xOutcome)
-    bb[2] <- cor(int, xOutcome)*(sd(xOutcome)/sds[1])
-    bb[3] <- cor(ar, xOutcome)*(sd(xOutcome)/sds[2])
-    bb[4] <- cor(resVar, xOutcome)*(sd(xOutcome)/sds[3])
+    bb[2] <- cor(int, xOutcome)/sds[1]
+    bb[3] <- cor(ar, xOutcome)/sds[2]
+    bb[4] <- cor(resVar, xOutcome)/res.sd
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }
