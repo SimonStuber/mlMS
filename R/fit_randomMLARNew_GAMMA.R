@@ -456,7 +456,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
                         control=list("adaptFactorExponent"=.8,
                                      "tries"=1,
                                      "adaptInterval"=500,
-                                     "propCov"=diag(c(inits$sds, inits$res.sd)^2)))
+                                     "propCov"=diag(c(inits$sds[1],inits$sds[2], inits$res.sd)^2)))
   #
   #
   # mcmcConfig$addSampler(type="RW",
@@ -477,7 +477,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
                         target=c(eff[i], res[i]),
                         control=list("adaptFactorExponent"=.8,
                                      "adaptInterval"=200,
-                                     "propCov"=diag(c(inits$b0[i], inits$b1[i], inits$res[i]))))
+                                     "propCov"=diag(c(inits$sds[1],inits$sds[2], inits$res.sd)^2)))
 
     # mcmcConfig$addSampler(type="RW",
     #                       target=eff3[i],
