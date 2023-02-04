@@ -450,12 +450,13 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #
   #
   #
-  # mcmcConfig$removeSampler(c("effMeans", "res.mean"))
-  # mcmcConfig$addSampler(type = 'RW_block',
-  #                       target=c("effMeans", "res.mean"),
-  #                       control=list("adaptFactorExponent"=.8,
-  #                                    "tries"=3,
-  #                                    "adaptInterval"=1000))
+  mcmcConfig$removeSampler(c("effMeans", "res.mean"))
+  mcmcConfig$addSampler(type = 'RW_block',
+                        target=c("effMeans", "res.mean"),
+                        control=list("adaptFactorExponent"=.8,
+                                     "tries"=1,
+                                     "adaptInterval"=500,
+                                     "propCov"=diag(c(inits$sds, inits$res.sd)^2)))
   #
   #
   # mcmcConfig$addSampler(type="RW",
@@ -467,23 +468,23 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   # eff <- c()
   # res <- c()
 
-  # mcmcConfig$removeSampler(c("eff"))
-  # for(i in 1:N){
-  #    eff[i] <- paste("eff[",i," ,", "1:2]", sep="")
-  #    res[i] <- paste("res[",i,"]", sep="")
-  #
-  # mcmcConfig$addSampler(type = 'crossLevel',
-  #                       target=c("eff"),
-  #                       control=list(topNodes=c("effMeans", "res.mean"),
-  #                                    "adaptFactorExponent"=.8,
-  #                                    "adaptInterval"=200))
+  mcmcConfig$removeSampler(c("eff"))
+  for(i in 1:N){
+     eff[i] <- paste("eff[",i," ,", "1:2]", sep="")
+     res[i] <- paste("res[",i,"]", sep="")
 
-  #   # mcmcConfig$addSampler(type="RW",
-  #   #                       target=eff3[i],
-  #   #                       control=list(scale=inits$eff[i, 3],
-  #   #                                    tries=2,
-  #   #                                    scale=inits$eff[i,3]))
-  # }
+  mcmcConfig$addSampler(type = 'RW_block',
+                        target=c(eff[i], res[i]),
+                        control=list("adaptFactorExponent"=.8,
+                                     "adaptInterval"=200,
+                                     "propCov"=diag(c(inits$b0[i], inits$b1[i], inits$res[i]))))
+
+    # mcmcConfig$addSampler(type="RW",
+    #                       target=eff3[i],
+    #                       control=list(scale=inits$eff[i, 3],
+    #                                    tries=2,
+    #                                    scale=inits$eff[i,3]))
+  }
 
   #   #
   # mcmcConfig$removeSampler(c("eff", "res"))
