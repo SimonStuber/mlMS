@@ -287,7 +287,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       #sds[3] ~ dunif(0,100)
       #}
 
-      effC ~ dunif(0,100)
+      effC ~ dnorm(0,.001)
 
       U[1,1] <- sds[1]^2
       U[2, 2] <- sds[2]^2
