@@ -450,12 +450,12 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #
   #
   #
-  mcmcConfig$removeSampler(c("effMeans", "res.mean"))
-  mcmcConfig$addSampler(type = 'RW_block',
-                        target=c("effMeans", "res.mean"),
-                        control=list("adaptFactorExponent"=.8,
-                                     "tries"=3,
-                                     "adaptInterval"=1000))
+  # mcmcConfig$removeSampler(c("effMeans", "res.mean"))
+  # mcmcConfig$addSampler(type = 'RW_block',
+  #                       target=c("effMeans", "res.mean"),
+  #                       control=list("adaptFactorExponent"=.8,
+  #                                    "tries"=3,
+  #                                    "adaptInterval"=1000))
   #
   #
   # mcmcConfig$addSampler(type="RW",
