@@ -464,9 +464,9 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                       control=list("tries"=2,
   #                                  "scale"=inits$effMeans[3]))
   #
-  #
-  # eff <- c()
-  # res <- c()
+
+  eff <- c()
+  res <- c()
 
   mcmcConfig$removeSampler(c("eff"))
   for(i in 1:N){
