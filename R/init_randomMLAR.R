@@ -71,7 +71,7 @@ init_randomMLAR <- function(y, xOutcome,nTime, constants){
     bb[1] <- mean(xOutcome)
     bb[2] <- cor(int, xOutcome)*(sd(xOutcome)/sds[1])
     bb[3] <- cor(ar, xOutcome)*(sd(xOutcome)/sds[2])
-    bb[4] <- (cor(resVar, xOutcome)*(sd(xOutcome)/sds[3]))/log(1 + (1/lm))
+    bb[4] <- (cor(resVar, xOutcome)*(sd(xOutcome)/sds[3]))/log(1 + (1/mean(resVar)))
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }
