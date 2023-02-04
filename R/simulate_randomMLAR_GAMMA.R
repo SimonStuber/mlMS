@@ -110,7 +110,7 @@ simulate_randomMLAR_G <- function(n, nTime,
   }
   y <- y[-c(1:100),]
 
-  res <- list(y=y, xAsOutcome=x, b0=b0,b=b1,res=res, shrinked=shrinked)
+  res <- list(y=y, xAsOutcome=x, b0=b0,b1=b1,res=res, shrinked=shrinked)
   return(res)
 
   #}
