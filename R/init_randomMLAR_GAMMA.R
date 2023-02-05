@@ -47,7 +47,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   # U <- chol(covMat)
 
   inits <- list(effMeans=c(mean(int),mean(ar)),
-                U=covMat,
+                effVar=covMat,
                 # Ustar=U/sds,
                 b0=b0,
                 b1=b1,

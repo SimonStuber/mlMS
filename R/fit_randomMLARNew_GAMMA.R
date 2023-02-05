@@ -211,7 +211,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
         }else{
           #    res[i] <- exp(eff[i,3])
         }
-        eff[i,1:2] ~ dmnorm(effMeans[1:2], cov=U[1:2, 1:2])
+        eff[i,1:2] ~ dmnorm(effMeans[1:2], cov=effVar[1:2, 1:2])
       }else{
         eff[i,1:2] ~ dmnorm(effMeans[1:2], effPrec[1:2,1:2])
       }
@@ -289,10 +289,10 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
 
       effC ~ dnorm(0,.001)
 
-      U[1,1] <- sds[1]^2
-      U[2, 2] <- sds[2]^2
-      U[1, 2] <- effC
-      U[2, 1] <- effC
+      effVar[1,1] <- sds[1]^2
+      effVar[2, 2] <- sds[2]^2
+      effVar[1, 2] <- effC
+      effVar[2, 1] <- effC
 
       phi <- (res.mean^2)/(res.sd^2)
       mu <- res.mean
@@ -308,7 +308,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
         #mssd[i] <- 2*var[i]*(1-b1[i])
 
       }
-      effVar[1:2,1:2] <- t(U[1:2,1:2])%*%(U[1:2,1:2])
+      #effVar[1:2,1:2] <- t(U[1:2,1:2])%*%(U[1:2,1:2])
     }else{
       fixRes ~ dnorm(0, 0.0000001)
       effPrec[1:2,1:2] ~ dwish(effPrecPriorMat[1:2, 1:2], 2)
@@ -383,7 +383,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
     inits$bb[5] <- 0
   }
 
-  monitorPars <- c("effMeans", "b1", "b0", "res", "eff", "effVar", "U", "res.mean", "res.sd")
+  monitorPars <- c("effMeans", "b1", "b0", "res", "eff", "effVar", "res.mean", "res.sd")
 
   if(constants$predAr){
     monitorPars <- c(monitorPars, "bArPred")
@@ -450,13 +450,15 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #
   #
   #
-  mcmcConfig$removeSampler(c("effMeans", "res.mean"))
+  mcmcConfig$removeSampler(c("effMeans",  "bb"))
   mcmcConfig$addSampler(type = 'RW_block',
-                        target=c("effMeans", "res.mean"),
-                        control=list("adaptFactorExponent"=.8,
-                                     "tries"=1,
-                                     "adaptInterval"=500,
-                                     "propCov"=diag(c(inits$sds[1],inits$sds[2], inits$res.sd)^2)))
+                        target=c("effMeans", "bb"))
+
+  mcmcConfig$addSampler(type = 'RW',
+                        target=c("res.mean"),
+                        control=list(reflective=TRUE))
+
+
   #
   #
   # mcmcConfig$addSampler(type="RW",
@@ -465,26 +467,27 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                                  "scale"=inits$effMeans[3]))
   #
 
-  eff <- c()
-  res <- c()
+  # eff <- c()
+  # res <- c()
+  #
+  # mcmcConfig$removeSampler(c("eff"))
+  # for(i in 1:N){
+  #    eff[i] <- paste("eff[",i," ,", "1:2]", sep="")
+  #    res[i] <- paste("res[",i,"]", sep="")
+  #
+  # mcmcConfig$addSampler(type = 'RW_block',
+  #                       target=c(eff[i], res[i]),
+  #                       control=list("adaptFactorExponent"=.8,
+  #                                    "adaptInterval"=200,
+  #                                    "propCov"=diag(c(inits$b0[i], inits$b1[i], inits$res[i]))))
 
-  mcmcConfig$removeSampler(c("eff"))
-  for(i in 1:N){
-     eff[i] <- paste("eff[",i," ,", "1:2]", sep="")
-     res[i] <- paste("res[",i,"]", sep="")
+  # mcmcConfig$addSampler(type="RW",
+  #                       target=eff3[i],
+  #                       control=list(scale=inits$eff[i, 3],
+  #                                    tries=2,
+  #                                    scale=inits$eff[i,3]))
+  #}
 
-  mcmcConfig$addSampler(type = 'RW_block',
-                        target=c(eff[i], res[i]),
-                        control=list("adaptFactorExponent"=.8,
-                                     "adaptInterval"=200,
-                                     "propCov"=diag(c(inits$sds[1],inits$sds[2], inits$res.sd)^2)))
-
-    # mcmcConfig$addSampler(type="RW",
-    #                       target=eff3[i],
-    #                       control=list(scale=inits$eff[i, 3],
-    #                                    tries=2,
-    #                                    scale=inits$eff[i,3]))
-  }
 
   #   #
   # mcmcConfig$removeSampler(c("eff", "res"))
@@ -495,15 +498,29 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                                    adaptFactorExponent=.2))
 
   # if(constants$predX){
-  #    mcmcConfig$removeSampler(c("bb"))
-  #   mcmcConfig$addSampler(type = 'crossLevel',
-  #                         target=c("bb"),
-  #                         control=list(topNodes=c("effMeans", "res.mean", "res.sd", "sds", "effC"),
-  #                                      "adaptFactorExponent"=.8,
-  #                                      "adaptInterval"=200))
+  mcmcConfig$removeSampler(c("sds", "effC"))
+  # mcmcConfig$addSampler(type = 'RW_block',
+  #                       target=c("sds", "effC"))
+
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("sds[1]"),
+                        control=list(reflective=TRUE))
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("sds[2]"),
+                        control=list(reflective=TRUE))
+
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("effC"))
+  for(i in 1:N){
+    mcmcConfig$removeSampler(c("res"))
+    mcmcConfig$addSampler(type = 'RW',
+                          target=paste("res[",i,"]", sep=""),
+                          control=list(reflective=TRUE))
+  }
+
   #
-  #   # mcmcConfig$addSampler(type = 'AF_slice',
-  #   #                       target=c("bb"))
+  # mcmcConfig$addSampler(type = 'AF_slice',
+  #                       target=c("res"))
   # }
 
 
@@ -556,7 +573,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
     finish <- Sys.time()
     runtime <- diff.Date(c(start,finish))
     print(paste("Completed sampling in", runtime))
-    return(list(samplesList, cMcmcMod, mcmcMod, compMod))
+    return(list(samplesList))
   }else{
     return(cMcmcMod)
   }
