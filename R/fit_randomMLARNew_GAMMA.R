@@ -450,9 +450,9 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #
   #
   #
-  mcmcConfig$removeSampler(c("effMeans",  "bb"))
-  mcmcConfig$addSampler(type = 'RW_block',
-                        target=c("effMeans", "bb"))
+  # mcmcConfig$removeSampler(c("effMeans",  "bb"))
+  # mcmcConfig$addSampler(type = 'RW_block',
+  #                       target=c("effMeans", "bb"))
 
   mcmcConfig$addSampler(type = 'RW',
                         target=c("res.mean"),
