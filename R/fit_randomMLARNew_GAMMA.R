@@ -522,7 +522,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
 
   mcmcConfig$addSampler(type = 'RW',
                         target=("effC"),
-                        control=list(scale=inits$effC))
+                        control=list(scale=abs(inits$effC)))
 
   mcmcConfig$removeSampler(c("res"))
   for(i in 1:N){
