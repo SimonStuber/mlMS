@@ -529,10 +529,11 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   mcmcConfig$removeSampler(c("res"))
   for(i in 1:N){
 
-    mcmcConfig$addSampler(type = 'crossLevel',
+    mcmcConfig$addSampler(type = 'RW',
                           target=paste("res[",i,"]", sep=""),
-                          control=list(topNodes=c("res.mean", "res.sd"),
-                                       scale=inits$res[i]))
+                          control=list(reflective=TRUE,
+                                       scale=inits$res[i],
+                                       adaptInterval=50))
   }
 
   #
