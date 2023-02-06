@@ -498,19 +498,31 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                                    adaptFactorExponent=.2))
 
   # if(constants$predX){
-  mcmcConfig$removeSampler(c("sds", "effC"))
+  mcmcConfig$removeSampler(c("sds", "effC", "res.sd", "xOutResVar"))
   # mcmcConfig$addSampler(type = 'RW_block',
   #                       target=c("sds", "effC"))
-
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("res.sd"),
+                        control=list(reflective=TRUE,
+                                     scale=inits$res.sd))
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("xOutResVar"),
+                        control=list(reflective=TRUE,
+                                     scale=inits$xOutResVar))
   mcmcConfig$addSampler(type = 'RW',
                         target=("sds[1]"),
-                        control=list(reflective=TRUE))
-  mcmcConfig$addSampler(type = 'RW',
-                        target=("sds[2]"),
-                        control=list(reflective=TRUE))
+                        control=list(reflective=TRUE,
+                                     scale=inits$sds[1]))
+
 
   mcmcConfig$addSampler(type = 'RW',
-                        target=("effC"))
+                        target=("sds[2]"),
+                        control=list(reflective=TRUE,
+                                     scale=inits$sds[2]))
+
+  mcmcConfig$addSampler(type = 'RW',
+                        target=("effC"),
+                        control=list(scale=inits$effC))
 
   mcmcConfig$removeSampler(c("res"))
   for(i in 1:N){
