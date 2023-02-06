@@ -456,7 +456,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
 
   mcmcConfig$addSampler(type = 'RW',
                         target=c("res.mean"),
-                        control=list(reflective=TRUE))
+                        control=list(reflective=FALSE))
 
 
   #
@@ -503,21 +503,21 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                       target=c("sds", "effC"))
   mcmcConfig$addSampler(type = 'RW',
                         target=("res.sd"),
-                        control=list(reflective=TRUE,
+                        control=list(reflective=FALSE,
                                      scale=inits$res.sd))
   mcmcConfig$addSampler(type = 'RW',
                         target=("xOutResVar"),
-                        control=list(reflective=TRUE,
+                        control=list(reflective=FALSE,
                                      scale=inits$xOutResVar))
   mcmcConfig$addSampler(type = 'RW',
                         target=("sds[1]"),
-                        control=list(reflective=TRUE,
+                        control=list(reflective=FALSE,
                                      scale=inits$sds[1]))
 
 
   mcmcConfig$addSampler(type = 'RW',
                         target=("sds[2]"),
-                        control=list(reflective=TRUE,
+                        control=list(reflective=FALSE,
                                      scale=inits$sds[2]))
 
   mcmcConfig$addSampler(type = 'RW',
