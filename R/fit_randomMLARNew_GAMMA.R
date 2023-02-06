@@ -519,7 +519,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
                           target=paste("res[",i,"]", sep=""),
                           control=list(reflective=TRUE,
                                        scale=inits$res[i],
-                                       adaptInterval=30))
+                                       adaptInterval=500))
   }
 
   #
