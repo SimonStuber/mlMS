@@ -40,7 +40,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   res <- resVar
   sds <- sqrt(c(var(int),var(ar)))
   res.mean <- mean(res)
-  res.sd <- sd(res)
+  res.var <- var(res)
   eff <- cbind(b0, b1)
   covMat <- cov(eff)
   diag(covMat) <- sds^2
@@ -56,7 +56,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
                 eff=eff,
                 effC=cov(b0, b1),
                 res.mean=res.mean,
-                res.sd=res.sd)
+                res.var=res.var)
 
 
 
@@ -75,7 +75,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
     bb[1] <- mean(xOutcome)
     bb[2] <- cor(int, xOutcome)/sds[1]
     bb[3] <- cor(ar, xOutcome)/sds[2]
-    bb[4] <- cor(resVar, xOutcome)/res.sd
+    bb[4] <- cor(resVar, xOutcome)/sqrt(res.var)
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }

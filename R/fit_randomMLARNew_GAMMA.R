@@ -294,13 +294,13 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       effVar[1, 2] <- effC
       effVar[2, 1] <- effC
 
-      phi <- (res.mean^2)/(res.sd^2)
+      phi <- (res.mean^2)/(res.var)
       mu <- res.mean
       shape <- phi+2
       scale <- mu*(1+phi)
 
       res.mean ~ dinvgamma(.5,.5)
-      res.sd ~ dinvgamma(.5,.5)
+      res.var ~ dunif(0, 10)
       for(i in 1:N){
         res[i] ~ dinvgamma(shape=shape, scale=scale)
         #  res[i] <- 1/resPrec[i]
@@ -383,7 +383,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
     inits$bb[5] <- 0
   }
 
-  monitorPars <- c("effMeans", "b1", "b0", "res", "eff", "effVar", "res.mean", "res.sd")
+  monitorPars <- c("effMeans", "b1", "b0", "res", "eff", "effVar", "res.mean", "res.var")
 
   if(constants$predAr){
     monitorPars <- c(monitorPars, "bArPred")
@@ -499,13 +499,13 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   #                                    adaptFactorExponent=.2))
 
   # if(constants$predX){
-  mcmcConfig$removeSampler(c("sds", "effC", "res.sd", "xOutResVar"))
+  mcmcConfig$removeSampler(c("sds", "effC", "res.var", "xOutResVar"))
   # mcmcConfig$addSampler(type = 'RW_block',
   #                       target=c("sds", "effC"))
   mcmcConfig$addSampler(type = 'RW',
-                        target=("res.sd"),
+                        target=("res.var"),
                         control=list(reflective=FALSE,
-                                     scale=inits$res.sd,
+                                     scale=inits$res.var,
                                      adaptInterval=1000))
   mcmcConfig$addSampler(type = 'RW',
                         target=("xOutResVar"),
