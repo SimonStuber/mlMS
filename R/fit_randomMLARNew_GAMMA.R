@@ -227,7 +227,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
           bb[i] ~ dnorm(0,.001)
         }
       }
-      xOutResVar ~ dunif(0,100)
+      xOutResVar ~ dinvgamma(.5,.5)
       if(fullAD){
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
