@@ -75,9 +75,9 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   if(constants$predX){
     bb <- c()
     bb[1] <- mean(xOutcome)
-    bb[2] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[1]
-    bb[3] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[2]
-    bb[4] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[3]
+    bb[2] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[1]
+    bb[3] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
+    bb[4] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }
