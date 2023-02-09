@@ -299,8 +299,8 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       shape <- phi+2
       scale <- mu*(1+phi)
 
-      res.mean ~ dinvgamma(.5,.5)
-      res.var ~ dinvgamma(.5,.5)
+      res.mean ~ dunif(0,100)
+      res.var ~ dunif(0,100)
       for(i in 1:N){
         res[i] ~ dinvgamma(shape=shape, scale=scale)
         #  res[i] <- 1/resPrec[i]
