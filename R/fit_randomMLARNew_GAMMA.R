@@ -227,7 +227,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
           bb[i] ~ dnorm(0,.001)
         }
       }
-      xOutResVar ~ dinvgamma(.5,.5)
+      xOutResVar ~ dgamma(.5,.5)
       if(fullAD){
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
@@ -237,7 +237,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       }else{
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
-          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], xOutResVar)
         }
       }
 
