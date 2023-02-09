@@ -46,6 +46,8 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   diag(covMat) <- sds^2
   # U <- chol(covMat)
 
+  effVar <- cov(cbind(b0,b1,res,xOutcome))
+  cm <- cov2cor(effVar)
   inits <- list(effMeans=c(mean(int),mean(ar)),
                 effVar=covMat,
                 # Ustar=U/sds,
@@ -73,9 +75,9 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   if(constants$predX){
     bb <- c()
     bb[1] <- mean(xOutcome)
-    bb[2] <- cor(int, xOutcome)/sds[1]
-    bb[3] <- cor(ar, xOutcome)/sds[2]
-    bb[4] <- cor(resVar, xOutcome)/sqrt(res.var)
+    bb[2] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[1]
+    bb[3] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[2]
+    bb[4] <- (solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3]))[3]
     inits$bb <- bb
     inits$xOutResVar <- 1/var(xOutcome)
   }
