@@ -79,7 +79,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
     bb[3] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
     bb[4] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
     inits$bb <- bb
-    inits$xOutResVar <- 1/var(xOutcome)
+    inits$xOutResVar <- var(xOutcome)
   }
   return(inits)
 }
