@@ -220,14 +220,14 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
     if(predX){
       if(fullAD){
         for(i in 1:5){
-          bb[i] ~ dnorm(0,.01)
+          bb[i] ~ dnorm(0,.001)
         }
       }else{
         for(i in 1:4){
-          bb[i] ~ dnorm(0,.01)
+          bb[i] ~ dnorm(0,.001)
         }
       }
-      xOutResVar ~ dunif(0,10)
+      xOutResVar ~ dunif(0,100)
 
       if(fullAD){
         for(i in 1:N){
@@ -288,7 +288,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       #sds[3] ~ dunif(0,100)
       #}
 
-      effC ~ dnorm(0,.01)
+      effC ~ dnorm(0,.001)
 
       effVar[1,1] <- sds[1]^2
       effVar[2, 2] <- sds[2]^2
