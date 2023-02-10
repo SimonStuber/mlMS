@@ -413,7 +413,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   # browser()
 
   mcmcConfig <- configureMCMC(buildMod,print = TRUE, monitors = monitorPars)
-  mcmcConfig$removeSampler(c("sds", "effC", "res.var", "xOutResVar", "res.mean"))
+  mcmcConfig$removeSampler(c("sds", "effC", "xOutResVar"))
   # mcmcConfig$removeSampler(c("eff"))
   # mcmcConfig$addSampler(type = 'AF_slice',
   #                       target=c("eff")),
