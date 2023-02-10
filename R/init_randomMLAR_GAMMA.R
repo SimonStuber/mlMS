@@ -73,13 +73,14 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
     inits$bMeanPred <- 0
   }
   if(constants$predX){
+    mod <- lm(xOutcome ~ b0 +b1 + res)
     bb <- c()
-    bb[1] <- mean(xOutcome)
-    bb[2] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[1]
-    bb[3] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
-    bb[4] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
+    bb[1] <- mod$coefficients[1] #mean(xOutcome)
+    bb[2] <- mod$coefficients[2]#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[1]
+    bb[3] <- mod$coefficients[3]#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
+    bb[4] <- mod$coefficients[4]#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
     inits$bb <- bb
-    inits$xOutResVar <- 1/var(xOutcome)
+    inits$xOutResVar <- 1/var(mod$residuals)
   }
   return(inits)
 }
