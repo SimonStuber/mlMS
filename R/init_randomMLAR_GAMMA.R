@@ -76,11 +76,11 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
    # mod <- lm(xOutcome ~ scale(b0, scale=FALSE) + scale(b1, scale=FALSE) + scale(res, scale=FALSE))
     bb <- c()
     bb[1] <- mean(xOutcome)
-    bb[2] <- cor(b0, xOutcome)/sds[1]#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[1]
-    bb[3] <- cor(b1, xOutcome)/sds[2]#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
-    bb[4] <- cor(res, xOutcome)/sqrt(res.var)#as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
+    bb[2] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[1]
+    bb[3] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[2]
+    bb[4] <- as.vector((solve(cov2cor(effVar)[1:3, 1:3])%*%cov2cor(effVar)[1:3,4])/c(sqrt(diag(effVar)[1:3])))[3]
     inits$bb <- bb
-    inits$xOutResVar <- 1/var(xOutcome)
+    inits$xOutResVar <- var(xOutcome)
   }
   return(inits)
 }
