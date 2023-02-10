@@ -231,13 +231,13 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       if(fullAD){
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*b0[i] + bb[3]*b1[i] + bb[4]*mssd[i] +bb[5]*var[i]
-          xOutcome[i] ~ dnorm(xOutHat[i], xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
 
       }else{
         for(i in 1:N){
           xOutHat[i] <-  bb[1] + bb[2]*(b0[i]-mean(b0[1:N])) + bb[3]*(b1[i]-mean(b1[1:N])) + bb[4]*(res[i]-mean(res[1:N]))
-          xOutcome[i] ~ dnorm(xOutHat[i], xOutResVar)
+          xOutcome[i] ~ dnorm(xOutHat[i], var=xOutResVar)
         }
       }
 
