@@ -289,7 +289,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       #}
 
       if(randomRes){
-        effMeans[3] ~ dnorm(0, 0.001)
+      #  effMeans[3] ~ dnorm(0, 0.001)
         #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
         Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
         # for(nsd in 1:3){
