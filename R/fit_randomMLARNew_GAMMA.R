@@ -211,7 +211,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
         }else{
           #    res[i] <- exp(eff[i,3])
         }
-        eff[i,1:2] ~ dmnorm(effMeans[1:2], cov=effVar[1:2, 1:2])
+        eff[i,1:2] ~ dmnorm(effMeans[1:2], cholesky = U[1:2, 1:2], prec_param = 0)
       }else{
         eff[i,1:2] ~ dmnorm(effMeans[1:2], effPrec[1:2,1:2])
       }
@@ -291,7 +291,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       if(randomRes){
       #  effMeans[3] ~ dnorm(0, 0.001)
         #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
-        Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
+        Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1.5, 3)
         # for(nsd in 1:3){
         sds[1] ~ dunif(0,100)
         sds[2] ~ dunif(0,2)
@@ -522,6 +522,13 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
                                      scale=inits$res.var,
                                      adaptInterval=1000,
                                      tries=2))
+  mcmcConfig$removeSampler(c("Ustar"))
+  mcmcConfig$addSampler(type = "RW_block_lkj_corr_cholesky",
+                        target=c("Ustar"),
+                        control=list("adaptFactorExponent"=.5,
+                        "adaptInterval"=600,
+                        "tries"=1))
+
   mcmcConfig$addSampler(type = 'RW',
                         target=("xOutResVar"),
                         control=list(reflective=FALSE,

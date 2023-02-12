@@ -51,7 +51,7 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
 
 
   inits <- list(effMeans=c(mean(int),mean(ar)),
-                effVar=effVar[1:3, 1:3],
+             #   effVar=effVar[1:3, 1:3],
                 Ustar=U/sds,
                 b0=b0,
                 b1=b1,
