@@ -283,17 +283,30 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
       # Ustar[1:2,1:2] ~ dlkj_corr_cholesky(1, 2)
       # for(nsd in 1:3){
-      sds[1] ~ dunif(0,100)
-      sds[2] ~ dunif(0,2)
+     # sds[1] ~ dunif(0,100)
+    #  sds[2] ~ dunif(0,2)
       #sds[3] ~ dunif(0,100)
       #}
 
-      effC ~ dnorm(0,.001)
+      if(randomRes){
+        effMeans[3] ~ dnorm(0, 0.001)
+        #   effPrec[1:3,1:3] ~ dwish(effPrecPriorMat[1:3, 1:3], 3)
+        Ustar[1:3,1:3] ~ dlkj_corr_cholesky(1, 3)
+        # for(nsd in 1:3){
+        sds[1] ~ dunif(0,100)
+        sds[2] ~ dunif(0,2)
+        res.var ~ dunif(0,100)
+        sds[3] <- res.var^2
+        #}
+        U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
+        effVar[1:3,1:3] <- t(U[1:3,1:3])%*%(U[1:3,1:3])
+}
+      # effC ~ dnorm(0,.001)
 
-      effVar[1,1] <- sds[1]^2
-      effVar[2, 2] <- sds[2]^2
-      effVar[1, 2] <- effC
-      effVar[2, 1] <- effC
+      # effVar[1,1] <- sds[1]^2
+      # effVar[2, 2] <- sds[2]^2
+      # effVar[1, 2] <- effC
+      # effVar[2, 1] <- effC
 
       phi <- (res.mean^2)/(res.var)
       mu <- res.mean
@@ -301,7 +314,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
       scale <- mu*(1+phi)
 
       res.mean ~ dunif(0,100)
-      res.var ~ dunif(0,100)
+   #   res.var ~ dunif(0,100)
       for(i in 1:N){
         res[i] ~ dinvgamma(shape=shape, scale=scale)
         #  res[i] <- 1/resPrec[i]

@@ -49,14 +49,14 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   effVar <- cov(cbind(b0,b1,res,xOutcome))
   cm <- cov2cor(effVar)
   inits <- list(effMeans=c(mean(int),mean(ar)),
-                effVar=covMat,
+                effVar=effVar[1:3, 1:3],
                 # Ustar=U/sds,
                 b0=b0,
                 b1=b1,
                 res=res,
                 sds=sds,
                 eff=eff,
-                effC=cov(b0, b1),
+              #  effC=cov(b0, b1),
                 res.mean=res.mean,
                 res.var=res.var)
 
