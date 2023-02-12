@@ -38,9 +38,10 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   b0 <- int
   b1 <- ar
   res <- resVar
-  sds <- sqrt(c(var(int),var(ar)))
+
   res.mean <- mean(res)
   res.var <- var(res)
+  sds <- sqrt(c(var(int),var(ar), res.var))
   eff <- cbind(b0, b1)
   covMat <- cov(eff)
   diag(covMat) <- sds^2
