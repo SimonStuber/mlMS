@@ -43,8 +43,8 @@ init_randomMLAR_G <- function(y, xOutcome,nTime, constants){
   res.var <- var(res)
   sds <- sqrt(c(var(int),var(ar), res.var))
   eff <- cbind(b0, b1)
-  covMat <- cov(eff)
-  diag(covMat) <- sds^2
+  #covMat <- cov(eff)
+  #diag(covMat) <- sds^2
   # U <- chol(covMat)
 
   effVar <- cov(cbind(b0,b1,res,xOutcome))
