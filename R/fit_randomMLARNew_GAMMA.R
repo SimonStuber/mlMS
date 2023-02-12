@@ -296,7 +296,7 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
         sds[1] ~ dunif(0,100)
         sds[2] ~ dunif(0,2)
         res.var ~ dunif(0,100)
-        sds[3] <- res.var^2
+        sds[3] <- sqrt(res.var)
         #}
         U[1:3,1:3] <- uppertri_mult_diag(Ustar[1:3, 1:3], sds[1:3])
         effVar[1:3,1:3] <- t(U[1:3,1:3])%*%(U[1:3,1:3])
