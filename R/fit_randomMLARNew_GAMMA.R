@@ -525,8 +525,8 @@ fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
   mcmcConfig$removeSampler(c("Ustar"))
   mcmcConfig$addSampler(type = "RW_block_lkj_corr_cholesky",
                         target=c("Ustar"),
-                        control=list("adaptFactorExponent"=.5,
-                        "adaptInterval"=600,
+                        control=list("adaptFactorExponent"=.9,
+                        "adaptInterval"=700,
                         "tries"=1))
 
   mcmcConfig$addSampler(type = 'RW',
