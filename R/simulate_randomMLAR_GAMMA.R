@@ -54,9 +54,9 @@ simulate_randomMLAR_G <- function(n, nTime,
   #browser()
 
   i <- 1
-  shrinked <- FALSE
+  #shrinked <- FALSE
 
-  while(i <= n) {
+  while(shrinked =TRUE) {
     # print(i)
     #raneffs[i,] <- mvtnorm::rmvnorm(1,effMeans, effVar)
 
@@ -73,15 +73,15 @@ simulate_randomMLAR_G <- function(n, nTime,
     x <- raneffs[,4]
 
 
-    if(abs(b1[i])>1){
-      print("Fixed and random effects have been shrinked to ensure stationarity.
-              Check output for updated, shrinked parameter values")
-      effVar<- effVar
-      effMeans <- .9*effMeans
+    if(any(abs(b1))>.98){
+      # print("Fixed and random effects have been shrinked to ensure stationarity.
+      #         Check output for updated, shrinked parameter values")
+      # effVar<- effVar
+      # effMeans <- .9*effMeans
       shrinked <- TRUE
-      i <- 1
+      #i <- 1
     } else {
-      i <- i+1
+      shrinked <- FALSE #i <- i+1
     }
   }
 
@@ -109,6 +109,10 @@ simulate_randomMLAR_G <- function(n, nTime,
     }
   }
   y <- y[-c(1:100),]
+
+  if(max(y)>100){
+    shrinked <- TRUE
+  }
 
   res <- list(y=y, xAsOutcome=x, b0=b0,b1=b1,res=res, shrinked=shrinked)
   return(res)
