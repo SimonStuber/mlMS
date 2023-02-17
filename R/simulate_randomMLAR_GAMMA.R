@@ -5,6 +5,11 @@ simulate_randomMLAR_G <- function(n, nTime,
   nTime <- nTime +100
   #browser()
   y <- array(NA, c(nTime, n))
+  raneffs <- array(NA, c(n, 4))
+  b0 <- c()
+  b1 <- c()
+  res <- c()
+  x <- c()
   #
   #   if(is.null(covMat)){
   #   rate <- c()
@@ -54,9 +59,9 @@ simulate_randomMLAR_G <- function(n, nTime,
   #browser()
 
   i <- 1
-  #shrinked <- FALSE
+  shrinked <- FALSE
 
-  while(shrinked =TRUE) {
+  while(i<=n) {
     # print(i)
     #raneffs[i,] <- mvtnorm::rmvnorm(1,effMeans, effVar)
 
@@ -66,22 +71,23 @@ simulate_randomMLAR_G <- function(n, nTime,
                                     list(mean=b1.means, sd=b1.sd),
                                     list(scale=scale,shape=shape),
                                     list(mean=5,sd=1)) )
-    raneffs <- rMvdc(n,myMvd)
-    b0 <- raneffs[,1]
-    b1 <- raneffs[,2]
-    res <- raneffs[,3]
-    x <- raneffs[,4]
+    raneffs[i,] <- rMvdc(1,myMvd)
+    b0[i] <- raneffs[i,1]
+    b1[i] <- raneffs[i,2]
+    res[i] <- raneffs[i,3]
+    x[i] <- raneffs[i,4]
 
 
-    if(any(abs(b1))>.98){
-      # print("Fixed and random effects have been shrinked to ensure stationarity.
-      #         Check output for updated, shrinked parameter values")
-      # effVar<- effVar
-      # effMeans <- .9*effMeans
+    if(abs(b1[i])>.98){
+      print("Fixed and random effects have been shrinked to ensure stationarity.
+              Check output for updated, shrinked parameter values")
+      effVar<- effVar
+      effMeans <- .9*effMeans
       shrinked <- TRUE
-      #i <- 1
+      i <- 1
     } else {
-      shrinked <- FALSE #i <- i+1
+      shrinked <- FALSE
+      i <- i+1
     }
   }
 
@@ -90,7 +96,7 @@ simulate_randomMLAR_G <- function(n, nTime,
 
 
   for(m in 1:n){
-
+   # browser()
 
     y[1,m] <- rnorm(1,b0[m],sqrt(res[m]))
 
@@ -104,12 +110,12 @@ simulate_randomMLAR_G <- function(n, nTime,
 
     for(t in 2:nTime){
 
-      y[t,m] <- b0[m] + b1[m]*(y[t-1,m]-b0[m]) + rnorm(1,0,sqrt(res[m]))
+      y[t,m] <- b0[m] + b1[m]*(y[t-1,m]-b0[m]) + stats::rnorm(1,0,sqrt(res[m]))
 
     }
   }
   y <- y[-c(1:100),]
-
+#browser()
   if(max(y)>100){
     shrinked <- TRUE
   }
