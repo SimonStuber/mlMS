@@ -2,94 +2,10 @@ library(nimble)
 library(lme4)
 library(BBmisc)
 
-#step 1: install nimble and all requirements
-#following https://r-nimble.org/html_manual/cha-installing-nimble.html
-
-#step 2: source this R-script
-
-#step 3: store data of of the uncentered dependent variable
-#in a matrix with dimensions nTime*N
-
-#step 4: (optional) store data of uncentered Lag-2
-#predictors in separate vectors
-#for the prediction of the autocorrelation (arOnX)
-#or the random residual variance (resVarOnX)
-
-#step 5: specify reasonable initial values and store them in a list.
-#
-#here, we start with starting initial for the
-#covariance matrix of the (specified) random effects
-#for instance, for a model with random intercepts,
-#random slopes and random residual variances, initial values can be specified
-#in the following way:
-# effVar <- diag(c(0,0,0))
-# effVar[1,1] <- 1 # assume a variance of 1 for the random intercept
-# effVar[2,2] <- 0.1 # assume a variance of .1 for the random autocorrelations
-# effVar[3,3] <- log(3) # assume a variance of 3,
-#for the random residual variance
-# note that the variance for the random residual variance needs
-#to be log-transformed
-#
-#we continue with starting values for the means of the random effects
-#effMeans=c(10,.1, log(3)) # for an average intercept of 10,
-#an average autocorrelation of .1 and an average residual variance of 3
-#
-#next, we specify initial values for the effect of the Level-2 predictors
-#
-# bResVarPred=0
-# bArPred=0
-# bMeanPred=0
-#
-#and for the mean at the first measurement occasion
-# b0Start=rep(10, N)
-#
-#now, store all initial values in a list
-# inits <- list(effMeans=effMeans,
-#            effVar=effVar,
-#            bResVarPred=bResVarPred,
-#            bArPred=bArPred,
-#           bMeanPred=bMeanPred,
-#            b0Start=b0Start)
-
-
-#step 6: now, we can specify certain constants, that define the model.
-#This information needs
-#to be stored in a list and provided to the fit_randomMLAR function
-#through the constants argument
-#
-# constants <- list(N=dim(y)[2],
-##number of individuals
-#                nTime=dim(y)[1],
-## maximum number of time points
-#                predAr=1,
-##should the random autocorrelation be predicted by a covaraite (0=no, 1=yes)?
-#                predResVar=1,
-##should the random residual variance be predicted by a covaraite (0=no, 1=yes)?
-#                predMean=1,
-##should the random intercepts be predicted by a covaraite (0=no, 1=yes)?
-#                randomRes=1,
-##should random effects in the residual variance be estimated (0=no, 1=yes)?
-#                lastT=lastT,
-## a vector with the first measurement occasion for every individual
-#                firstT=firstT
-## a vector with the last measurement occasion for every inidividual
-#)
-
-# #step 7: fit the model
-# res <- fit_randomMLAR(y, arOnX=x,
-#                       resVarOnX=x,
-#                       meanOnX=x,
-#                       niter = 60000,
-#                       nburnin = 30000,
-#                       inits=inits,
-#                       constants=constants)
-
-#step 8: inspect results
-#summary(res)
 
 
 
-fit_randomMLAR_G <- function(y, niter=30000, nburnin=20000,
+fit_randomMLAR <- function(y, niter=30000, nburnin=20000,
                              thin=1, nchains=1, inits=NULL,
                              summary=TRUE,
                              arOnX=NULL,
