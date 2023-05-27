@@ -36,3 +36,6 @@ https://doi.org/10.1080/00273171.2018.1439722)
 
 https://github.com/qureshlatif/QSLpersonal/blob/master/R/RunNimbleParallel.R
 
+Asparouhov, T., Hamaker, E. L., & Muthén, B. (2018). Dynamic Structural Equation Models. Structural Equation Modeling: A Multidisciplinary Journal, 25(3), 359–388. https://doi.org/10.1080/10705511.2017.1406803
+
+
