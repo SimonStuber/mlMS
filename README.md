@@ -1,8 +1,9 @@
 # mlMS
-Developmental R-Package to fit various multilevel Bayesian Markov switching models. 
+Developmental R-Package to fit various multilevel Bayesian Markov switching models and some nested models. 
+All Markov switching models are fitted through a combination of the well known forward-algorithm and various samplers from the Nimble package. 
 The most complex model that can be fitted is the multilevel Bayesian Markov switching vector autoregressive (ML-MS-VAR) model. 
-Other models that can be fitted, can be seen as special cases of the ML-MS-VAR model. The implemented ML-MS-VAR model
-features random effects in all model parts: the intercepts, the autoregressive effects, 
+Other models that can be fitted, can be seen as special cases of the ML-MS-VAR model. 
+The implemented ML-MS-VAR model features random effects in all model parts: the intercepts, the autoregressive effects, 
 the residual variances and the transition probabilities. See "test_mlMSVAR.R" for an example of how to simulate data
 and fit the model. 
 
