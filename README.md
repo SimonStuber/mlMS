@@ -27,6 +27,9 @@ Turek, D., de Valpine, P., & Paciorek, C. J. (2016).
 Efficient Markov chain Monte Carlo sampling for hierarchical hidden Markov models. 
 Environmental and Ecological Statistics, 23(4), 549–564. https://doi.org/10.1007/s10651-016-0353-z
 
+Zucchini, W., MacDonald, I. L., & Langrock, R. (2016). 
+Hidden markov models for time series: An introduction using R (Second edition). CRC Press, Taylor & Francis Group.
+
 https://github.com/emmekeaarts/mHMMbayes
 
 Bringmann, L. F., Ferrer, E., Hamaker, E. L., Borsboom, D., & Tuerlinckx,
