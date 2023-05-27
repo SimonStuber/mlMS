@@ -7,7 +7,7 @@ Maintainer: Simon Stuber <simon.stuber1@gmail.com>
 Description: Fit the Bayesian multilevel Markov switching vector autoregressive model and 4 nested models: 
     the multilevel Markov switching autoregressive model, the multilevel hidden Markov model, 
     the multilevel vector autoregressive model and the random multilevel autoregressive model
-License: What license is it under?
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: nimble, coda, graphicalVAR, tidyverse, Matrix, parallel, mcmcOutput, dplyr, stringr, BBmisc
