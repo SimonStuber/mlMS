@@ -67,7 +67,7 @@ dForProbsMSVARnew <- nimbleFunction(
     alpha_prob <- matrix(0, nTime,M)
     allprobs <- dens
     delta <- probs1
-#check zucchini 2016
+#check zucchini et al. 2016
     foo             <- delta[1:M] * allprobs[1, 1:M]
     sumfoo          <- sum(foo)
     alpha_prob[1, 1:M] <- foo/sumfoo
