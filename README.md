@@ -1,0 +1,33 @@
+# mlMS
+Developmental R-Package to fit various multilevel Bayesian Markov switching models. 
+The most complex model that can be fitted is the Bayesian Markov switching vector autoregressive (ML-MS-VAR) model. 
+Other models that can be fitted, can be seen as special cases of the ML-MS-VAR model. The implemented ML-MS-VAR model
+features random effects in all model parts: the intercepts, the autoregressive effects, 
+the residual variances and the transition probabilities. See "test_mlMSVAR.R" for an example of how to simulate data
+and fit the model. 
+
+
+Also check out some of the main inspirations for this project:
+
+Crayen, C., Eid, M., Lischetzke, T., Courvoisier, D. S., & Vermunt, J. K. (2012). 
+Exploring Dynamics in Mood Regulation—Mixture Latent Markov Modeling of Ambulatory Assessment Data. 
+Psychosomatic Medicine, 74(4), 366–376. https://doi.org/10.1097/PSY.0b013e31825474cb
+
+de Haan-Rietdijk, S., Kuppens, P., Bergeman, C. S., Sheeber, L. B., Allen, N. B., & Hamaker, E. L. (2017). 
+On the Use of Mixed Markov Models for Intensive Longitudinal Data. 
+Multivariate Behavioral Research, 52(6), 747–767. https://doi.org/10.1080/00273171.2017.1370364
+
+Turek, D., de Valpine, P., & Paciorek, C. J. (2016). 
+Efficient Markov chain Monte Carlo sampling for hierarchical hidden Markov models. 
+Environmental and Ecological Statistics, 23(4), 549–564. https://doi.org/10.1007/s10651-016-0353-z
+
+https://github.com/emmekeaarts/mHMMbayes
+
+https://github.com/SachaEpskamp/mlVAR
+
+Bringmann, L. F., Ferrer, E., Hamaker, E. L., Borsboom, D., & Tuerlinckx,
+F. (n.d.). Modeling nonstationary emotion dynamics in dyads using a time-
+varying vector-autoregressive model. , 53 (3), 293–314. Retrieved 2022-03-30, from
+https://doi.org/10.1080/00273171.2018.1439722 (Publisher: Routledge eprint:
+https://doi.org/10.1080/00273171.2018.1439722)
+
