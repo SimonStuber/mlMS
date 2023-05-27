@@ -1,4 +1,4 @@
-simulate_randomMLAR_G <- function(n, nTime,
+simulate_randomMLAR <- function(n, nTime,
                                   b0.means, b1.means,b0.sd,b1.sd,res.mean,res.var,
                                   correlations){
 
