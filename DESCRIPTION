@@ -3,7 +3,7 @@ Type: Package
 Title: Bayesian Multilevel (Vector) Autoregressive and Markov Switching Models 
 Version: 0.1.0
 Author: Simon Stuber
-Maintainer: Simon Stuber <simon.stuber@rptu.de>
+Maintainer: Simon Stuber <simon.stuber1@gmail.com>
 Description: Fit the Bayesian multilevel Markov switching vector autoregressive model and 4 nested models: 
     the multilevel Markov switching autoregressive model, the multilevel hidden Markov model, 
     the multilevel vector autoregressive model and the random multilevel autoregressive model
