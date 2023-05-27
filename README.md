@@ -42,4 +42,7 @@ https://github.com/qureshlatif/QSLpersonal/blob/master/R/RunNimbleParallel.R
 
 Asparouhov, T., Hamaker, E. L., & Muthén, B. (2018). Dynamic Structural Equation Models. Structural Equation Modeling: A Multidisciplinary Journal, 25(3), 359–388. https://doi.org/10.1080/10705511.2017.1406803
 
+Jahng, S., Wood, P. K., & Trull, T. J. (2008). Analysis of affective instability in ecological mo-
+mentary assessment: Indices using successive difference and group comparison via multilevel
+modeling. , 13 (4), 354–375. (Place: US Publisher: American Psychological Association) 17
 
