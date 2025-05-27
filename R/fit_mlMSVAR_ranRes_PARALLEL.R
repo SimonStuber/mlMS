@@ -240,7 +240,7 @@ nVars <- nVars
       for(state in 1:M){
         for (prev in 1:M){
           for(i in 1:N){
-            odds[i,prev,state] <- exp(v[i,prev,state])
+            odds[i,prev,state] <- exp(vTemp[i,prev,state])
             probs[i, prev,state] <- odds[i,prev,state]/totalodds[i,prev]
           }
         }
@@ -254,7 +254,7 @@ nVars <- nVars
 
 
 
-      v[1:N, 1:M, 1:M] <- makeMat(raneffs[1:N,1:(M*M-M)],N,M)
+      vTemp[1:N, 1:M, 1:M] <- makeMat(raneffs[1:N,1:(M*M-M)],N,M)
 
 
       for(i in 1:N){
