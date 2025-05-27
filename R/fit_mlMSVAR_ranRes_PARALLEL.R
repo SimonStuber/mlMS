@@ -101,8 +101,8 @@ nVars <- nVars
          # allB[i,1:((nVars*nVars)+nVars),state] ~ dmnorm(b)
             bRaneff[i,1:(nVars*nVars),state] ~ dmnorm(b.means[1:(nVars*nVars),state], cov=b.prec[1:(nVars*nVars),1:(nVars*nVars),state])
            # constraint_data ~ dconstraint(max(abs(bRaneff[i,1:(nVars*nVars),state]))< 1 )
-          for(v in 1:nVars){
-              b1[i,v,state] ~ dnorm(b1.means[v,state], var=b1.prec[v,state])
+          for(V in 1:nVars){
+              b1[i,V,state] ~ dnorm(b1.means[V,state], var=b1.prec[V,state])
             }
           }
       }
@@ -142,8 +142,8 @@ nVars <- nVars
 
       for(state in 1:M){
         b.prec[1:(nVars*nVars),1:(nVars*nVars),state] ~ dinvwish(mat1[1:(nVars*nVars), 1:(nVars*nVars),state],(nVars*nVars))
-        for(v in 1:nVars){
-          b1.prec[v,state] ~ dinvgamma(.1, .1)
+        for(V in 1:nVars){
+          b1.prec[V,state] ~ dinvgamma(.1, .1)
         }
 
       }
